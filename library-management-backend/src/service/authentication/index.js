@@ -1,19 +1,82 @@
-export const login = (username, password) => {
-    const mockUser = {
-        username: "admin",
-        password: "password",
-    };
+import User from "../../models/user.js";
 
-    if (username === mockUser.username && password === mockUser.password) {
+import bcrypt from "bcrypt";
+
+export const login = async (usernameOrEmail, password) => {
+    try {
+        const user = await User.findOne({
+            $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
+        });
+        if (!user) {
+            return {
+                message: "cannot find user",
+                status: false,
+                code: 404,
+            };
+        } else {
+            const result = await bcrypt.compare(password, user.password);
+            if (result) {
+                return {
+                    message: "success",
+                    status: true,
+                    code: 200,
+                    payload: user,
+                };
+            } else {
+                return { message: "wrong password", status: false, code: 400 };
+            }
+        }
+    } catch (error) {
         return {
-            success: true,
-            message: "Login successful",
-            token: "mockToken123",
+            message: error.message,
+            status: false,
+            code: 500,
         };
-    } else {
+    }
+};
+
+export const register = async (
+    username,
+    password_hash,
+    email,
+    address,
+    phoneNumber
+) => {
+    try {
+        const user = await User.exists({
+            $or: [{ username: username }, { email: email }],
+        });
+
+        if (user) {
+            return {
+                message: "username or email are already existed",
+                status: false,
+            };
+        }
+        User.create({
+            username: username,
+            password: password_hash,
+            email: email,
+            address: address,
+            phonenumber: phoneNumber,
+        });
         return {
-            success: false,
-            message: "Invalid username or password",
+            message: "User registed successfully",
+            status: true,
         };
+    } catch (error) {
+        return {
+            message: `something went wrong ${error}`,
+            status: false,
+        };
+    }
+};
+
+export const getAllUsers = async () => {
+    try {
+        const users = await User.find();
+        return users;
+    } catch (error) {
+        return error.message;
     }
 };

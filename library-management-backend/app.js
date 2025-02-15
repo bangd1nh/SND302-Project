@@ -10,9 +10,11 @@ app.use(loggingMiddleware);
 app.use(router);
 
 connectDB()
-    .then(
+    .then(() => {
         app.listen(3000, () => {
             console.log("server is running on port 3000");
-        })
-    )
-    .catch(console.log("cannot connect to db"));
+        });
+    })
+    .catch((error) => {
+        console.log("cannot connect to db", error);
+    });
