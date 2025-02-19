@@ -1,8 +1,13 @@
 import express from "express";
 import {
+    createToken,
+    forgotPassword,
     getAllUsers,
     login,
     register,
+    sendResetToken,
+    sendToken,
+    verifyUser,
 } from "../service/authentication/index.js";
 import { hashPassword } from "../utils/index.js";
 import jwt from "jsonwebtoken";
@@ -16,9 +21,9 @@ authenticate.post("/login", async (req, res) => {
         const authenticatedUser = {
             usernameOrEmail: usernameOrEmail,
             role: result.payload.role,
+            verify: result.payload.verify,
         };
         const j = jwt.sign(authenticatedUser, process.env.SECRET_KEY);
-        console.log(j);
     }
     res.status(result.code).send(result);
 });
@@ -33,15 +38,37 @@ authenticate.post("/register", async (req, res) => {
         address,
         phoneNumber
     );
-    console.log(result);
     if (result.status) {
-        res.status(201).json(result);
+        const token = await createToken(result.payload._id);
+        if (token) {
+            const sent = await sendToken(email, token.payload.token);
+            res.status(sent.code).json(result);
+        }
     } else {
         res.status(400).json({
             message: "Registration failed",
             error: result.message,
         });
     }
+});
+
+authenticate.get("/verify/:token", async (req, res) => {
+    const token = req.params.token;
+    const result = await verifyUser(token);
+    res.status(result.code).send(result.message);
+});
+
+authenticate.post("/forgotPassword", async (req, res) => {
+    const { email } = req.body;
+    const result = await sendResetToken(email);
+    res.status(result.code).send(result);
+});
+
+authenticate.post("/forgotPassword/:recoveryToken", async (req, res) => {
+    const { email, newPassword } = req.body;
+    const recoveryToken = req.params["recoveryToken"];
+    const result = await forgotPassword(email, recoveryToken, newPassword);
+    res.status(result.code).send(result.message);
 });
 
 authenticate.get("/", authenticateTokenForUser, async (req, res) => {
