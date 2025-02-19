@@ -13,6 +13,7 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true,
         maxlength: 100,
+        unique: true,
     },
     phoneNumber: {
         type: String,
@@ -36,6 +37,10 @@ const UserSchema = mongoose.Schema({
     },
     imageUrl: {
         type: String,
+    },
+    verify: {
+        type: Boolean,
+        default: false,
     },
 });
 
