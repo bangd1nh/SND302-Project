@@ -20,10 +20,19 @@ authenticate.post("/login", async (req, res) => {
     if (result.status) {
         const authenticatedUser = {
             usernameOrEmail: usernameOrEmail,
+            userId: result.payload._id,
             role: result.payload.role,
             verify: result.payload.verify,
         };
         const j = jwt.sign(authenticatedUser, process.env.SECRET_KEY);
+        const response = {
+            token: j,
+            userId: result.payload._id,
+            role: result.payload.role,
+            verify: result.payload.verify,
+            email: result.payload.email,
+        };
+        return res.status(result.code).send(response);
     }
     res.status(result.code).send(result);
 });
