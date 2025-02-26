@@ -165,7 +165,9 @@ export const forgotPassword = async (email, recoveryToken, newPassword) => {
 export const sendResetToken = async (email) => {
     try {
         const user = await User.findOne({ email: email });
+        console.log(email);
         if (user) {
+            console.log(user);
             const resetPToken = generateToken();
             const t = {
                 token: resetPToken,
@@ -177,15 +179,65 @@ export const sendResetToken = async (email) => {
                 const result = await sendEmail(
                     email,
                     `reset password`,
-                    `localhost:8080/api/authenticate/forgotPassword/${resetPToken}`
+                    `http://localhost:5173/resetpassword/${resetPToken}`
                 );
                 return result;
             }
         }
+        return {
+            code: 404,
+            message: "not found " + email,
+        };
     } catch (error) {
         return {
             message: error.message,
             code: 500,
+        };
+    }
+};
+
+export const getEmailByToken = async (token) => {
+    try {
+        const tokenObj = await Token.findOne({ token: token }).populate(
+            "userId"
+        );
+        if (tokenObj) {
+            return {
+                code: 200,
+                message: "token valid",
+                email: tokenObj.userId.email,
+            };
+        }
+        return {
+            code: 404,
+            message: "token is not valid",
+            email: null,
+        };
+    } catch (error) {
+        return {
+            code: 500,
+            message: "some thing went wrong with server",
+        };
+    }
+};
+
+export const checkToken = async (token) => {
+    try {
+        const tokenObj = await Token.findOne({ token: token });
+        if (tokenObj) {
+            return {
+                message: "valid Token",
+                code: 200,
+            };
+        }
+        return {
+            message: "invalid Token or token has been expire",
+            code: 200,
+        };
+    } catch (error) {
+        return {
+            code: 500,
+            message: "some thing went wrong with the server",
         };
     }
 };
