@@ -1,8 +1,10 @@
 import express from "express";
 import {
+    checkToken,
     createToken,
     forgotPassword,
     getAllUsers,
+    getEmailByToken,
     login,
     register,
     sendResetToken,
@@ -78,6 +80,18 @@ authenticate.post("/forgotPassword/:recoveryToken", async (req, res) => {
     const recoveryToken = req.params["recoveryToken"];
     const result = await forgotPassword(email, recoveryToken, newPassword);
     res.status(result.code).send(result.message);
+});
+
+authenticate.get("/getEmail/:token", async (req, res) => {
+    const token = req.params.token;
+    const result = await getEmailByToken(token);
+    res.status(result.code).send(result);
+});
+
+authenticate.get("/checkResetToken/:token", async (req, res) => {
+    const { token } = req.params;
+    const result = await checkToken(token);
+    res.status(result.code).send(result);
 });
 
 authenticate.get("/", authenticateTokenForUser, async (req, res) => {
