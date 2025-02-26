@@ -5,12 +5,12 @@ const categorySchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    books: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Book",
-        },
-    ],
+    books: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Book",
+    },
 });
 
 const Category = mongoose.model("Category", categorySchema);
+
+export default Category;
