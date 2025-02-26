@@ -21,7 +21,7 @@ review.get("/", async (req, res) => {
 
 review.get("/:bookId", async (req, res) => {
     const { bookId } = req.params;
-    const result = await getReviewByBookId(id);
+    const result = await getReviewByBookId(bookId);
     res.status(result.code).send(result.payload);
 });
 
