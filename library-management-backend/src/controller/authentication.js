@@ -1,8 +1,10 @@
 import express from "express";
 import {
+    checkToken,
     createToken,
     forgotPassword,
     getAllUsers,
+    getEmailByToken,
     login,
     register,
     sendResetToken,
@@ -20,10 +22,19 @@ authenticate.post("/login", async (req, res) => {
     if (result.status) {
         const authenticatedUser = {
             usernameOrEmail: usernameOrEmail,
+            userId: result.payload._id,
             role: result.payload.role,
             verify: result.payload.verify,
         };
         const j = jwt.sign(authenticatedUser, process.env.SECRET_KEY);
+        const response = {
+            token: j,
+            userId: result.payload._id,
+            role: result.payload.role,
+            verify: result.payload.verify,
+            email: result.payload.email,
+        };
+        return res.status(result.code).send(response);
     }
     res.status(result.code).send(result);
 });
@@ -69,6 +80,18 @@ authenticate.post("/forgotPassword/:recoveryToken", async (req, res) => {
     const recoveryToken = req.params["recoveryToken"];
     const result = await forgotPassword(email, recoveryToken, newPassword);
     res.status(result.code).send(result.message);
+});
+
+authenticate.get("/getEmail/:token", async (req, res) => {
+    const token = req.params.token;
+    const result = await getEmailByToken(token);
+    res.status(result.code).send(result);
+});
+
+authenticate.get("/checkResetToken/:token", async (req, res) => {
+    const { token } = req.params;
+    const result = await checkToken(token);
+    res.status(result.code).send(result);
 });
 
 authenticate.get("/", authenticateTokenForUser, async (req, res) => {

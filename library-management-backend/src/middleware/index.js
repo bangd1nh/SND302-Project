@@ -37,3 +37,20 @@ export const authenticateForAdminUser = (req, res, next) => {
         }
     });
 };
+
+export const matchUserId = (req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (token == null) return res.status(401).send("Unauthorize");
+    jwt.verify(token, process.env.SECRET_KEY, (err, authenticatedUser) => {
+        if (err) return res.status(403).send("forbiden");
+        if (
+            authenticatedUser.role === "admin" ||
+            authenticatedUser.userId === req.body.userId
+        ) {
+            next();
+        } else {
+            res.status(401).send("userId not matches");
+        }
+    });
+};

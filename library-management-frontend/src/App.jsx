@@ -1,35 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import "./App.css";
+import Navbar from "./component/Navbar";
+import { Route, Routes } from "react-router-dom";
+import LandingPage from "./component/Page/LandingPage";
+import Footer from "./component/Footer";
+import Login from "./component/Page/Login";
+import Register from "./component/Page/Register";
+import ForgotPassword from "./component/Page/ForgotPassword";
+import ResetPassword from "./component/Page/ResetPassword";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <>
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/resetpassword" element={<ForgotPassword />} />
+                <Route
+                    path="/resetpassword/:token"
+                    element={<ResetPassword />}
+                />
+            </Routes>
+            <Footer />
+        </>
+    );
 }
 
-export default App
+export default App;
