@@ -2,13 +2,29 @@ import book from "../../controller/book.js";
 import Author from "../../models/author.js";
 import Book from "../../models/book.js";
 import Category from "../../models/category.js";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRETE,
+});
 
 export const getAllBooks = async () => {
-    const result = await Book.find().populate("Category", "CategoryName");
-    return {
-        code: 200,
-        payload: result,
-    };
+    try {
+        const result = await Book.find()
+            .populate({ path: "categoryId", select: "categoryName" })
+            .populate({ path: "authorId", select: "authorName" });
+        return {
+            code: 200,
+            payload: result,
+        };
+    } catch (error) {
+        return {
+            code: 500,
+            payload: error.message,
+        };
+    }
 };
 
 export const getBookByBookId = async (bookId) => {
@@ -31,6 +47,12 @@ export const getBookByBookId = async (bookId) => {
 export const insertBook = async (book) => {
     try {
         const result = await Book.create(book);
+        const category = await Category.findByIdAndUpdate(book.categoryId, {
+            $push: { books: result._id },
+        });
+        if (!category) {
+            return { code: 404, payload: "can not find this category" };
+        }
         return {
             code: 200,
             payload: result,
