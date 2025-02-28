@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { resetPassword } from "../../Services/authenticateService";
+import { resetPassword } from "../Services/authenticateService";
 
 function ForgotPassword() {
     const [email, setEmail] = useState("");
@@ -22,7 +22,7 @@ function ForgotPassword() {
     };
 
     return (
-        <div className="bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8 mt-20">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
                     <div className="text-center mb-8">

@@ -9,7 +9,15 @@ export const getAllCategory = async () => {
 };
 
 export const getCategory = async (categoryId) => {
-    const result = await Category.findById(categoryId).populate("Book");
+    const result = await Category.findById(categoryId)
+        .populate({
+            path: "books",
+            populate: {
+                path: "authorId",
+                select: "authorName",
+            },
+        })
+        .select("categoryName");
     if (result) {
         return {
             code: 200,

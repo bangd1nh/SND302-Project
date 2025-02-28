@@ -32,7 +32,7 @@ category.put("/:categoryId", authenticateForAdminUser, (req, res) => {
     res.status(result.code).send(result.payload);
 });
 
-category.post("/", authenticateForAdminUser, async (req, res) => {
+category.post("/", async (req, res) => {
     const { categoryName } = req.body;
     const result = await insertCategory(categoryName);
     res.status(result.code).send(result.payload);

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { register } from "../../Services/authenticateService";
+import { register } from "../Services/authenticateService";
 import { useNavigate } from "react-router-dom";
 
 function Register() {
