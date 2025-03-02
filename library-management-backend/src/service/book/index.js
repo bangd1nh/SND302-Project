@@ -28,10 +28,12 @@ export const getAllBooks = async () => {
 };
 
 export const getBookByBookId = async (bookId) => {
-    const result = await Book.findById(bookId).populate(
-        "Category",
-        "CategoryName"
-    );
+    const result = await Book.findById(bookId)
+        .populate({
+            path: "categoryId",
+            select: "categoryName",
+        })
+        .populate({ path: "authorId", select: "authorName" });
     if (result) {
         return {
             code: 200,

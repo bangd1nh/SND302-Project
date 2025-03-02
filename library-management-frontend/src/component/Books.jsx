@@ -18,7 +18,7 @@ function Books({ books }) {
                         return (
                             <Link
                                 key={b._id}
-                                to={`/books/${b._id}`}
+                                to={`/book/${b._id}`}
                                 className="lg:w-1/4 md:w-1/2 p-4 w-1/2 border border-opacity-50 mb-4 cursor-pointer book-card "
                             >
                                 <div className="block relative h-48 rounded overflow-hidden">

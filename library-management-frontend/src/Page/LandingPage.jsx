@@ -6,7 +6,6 @@ import Banner from "../component/Banner";
 
 function LandingPage() {
     const [categoryName, setCategoryName] = useState([]);
-    const [books, setBooks] = useState([]);
 
     useEffect(() => {
         getAllCategory()
@@ -14,19 +13,11 @@ function LandingPage() {
                 setCategoryName(res.data);
             })
             .catch((err) => console.log(err));
-
-        getAllBooks()
-            .then((res) => {
-                console.log(res.data);
-                setBooks(res.data);
-            })
-            .catch((err) => console.log(err));
     }, []);
     return (
         <div>
             <Banner />
             <CategoryCard categoryName={categoryName} />
-            <Books books={books} />
         </div>
     );
 }

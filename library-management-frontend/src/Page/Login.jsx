@@ -15,7 +15,8 @@ function Login() {
 
     const naviage = useNavigate();
 
-    const handleLogin = (user) => {
+    const handleLogin = (user, e) => {
+        e.preventDefault();
         loginAPICALL(user.usernameOrEmail, user.password)
             .then((response) => {
                 const token = "Bearer " + response.data.token;
@@ -169,7 +170,7 @@ function Login() {
                         <button
                             type="submit"
                             className="w-full flex justify-center py-2 px-4 sm:py-3 border border-transparent rounded-lg shadow-sm text-sm sm:text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            onClick={() => handleLogin(user)}
+                            onClick={(e) => handleLogin(user, e)}
                         >
                             <span>Sign In</span>
                         </button>

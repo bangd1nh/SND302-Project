@@ -20,6 +20,10 @@ const reviewSchema = mongoose.Schema({
         type: Date,
         default: Date.now(),
     },
+    bookId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Book",
+    },
 });
 
 const Review = mongoose.model("Review", reviewSchema);
