@@ -9,6 +9,7 @@ import Register from "./Page/Register";
 import ForgotPassword from "./Page/ForgotPassword";
 import ResetPassword from "./Page/ResetPassword";
 import Category from "./Page/Category";
+import BookDetail from "./Page/BookDetail";
 
 function App() {
     return (
@@ -24,6 +25,7 @@ function App() {
                     element={<ResetPassword />}
                 />
                 <Route path="/category" element={<Category />} />
+                <Route path="/book/:bookId" element={<BookDetail />} />
             </Routes>
             <Footer />
         </>

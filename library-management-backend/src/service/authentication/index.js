@@ -10,6 +10,7 @@ export const login = async (usernameOrEmail, password) => {
         const user = await User.findOne({
             $or: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
         });
+        console.log(user);
         if (!user) {
             return {
                 message: "cannot find user",
