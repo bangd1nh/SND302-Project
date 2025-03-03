@@ -18,7 +18,19 @@ export const getAllReview = async () => {
 
 export const getReviewByBookId = async (id) => {
     try {
-        const result = await Review.find({ bookId: id }).populate();
+        const result = await Review.find({ bookId: id })
+            .populate({
+                path: "userId",
+                select: "username",
+            })
+            .populate({
+                path: "bookId",
+                select: "categoryId",
+                populate: {
+                    path: "categoryId",
+                    select: "categoryName",
+                },
+            });
         if (!result) return { code: 404 };
         return {
             code: 200,
@@ -39,6 +51,7 @@ export const postReview = async (bookId, userId, rating, reviewText) => {
         const result = await Review.insertOne({
             userId: userId,
             rating: rating,
+            bookId: bookId,
             reviewText: reviewText,
         });
         return {

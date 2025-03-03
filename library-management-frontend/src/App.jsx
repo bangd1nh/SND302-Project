@@ -2,12 +2,14 @@ import { useState } from "react";
 import "./App.css";
 import Navbar from "./component/Navbar";
 import { Route, Routes } from "react-router-dom";
-import LandingPage from "./component/Page/LandingPage";
+import LandingPage from "./Page/LandingPage";
 import Footer from "./component/Footer";
-import Login from "./component/Page/Login";
-import Register from "./component/Page/Register";
-import ForgotPassword from "./component/Page/ForgotPassword";
-import ResetPassword from "./component/Page/ResetPassword";
+import Login from "./Page/Login";
+import Register from "./Page/Register";
+import ForgotPassword from "./Page/ForgotPassword";
+import ResetPassword from "./Page/ResetPassword";
+import Category from "./Page/Category";
+import BookDetail from "./Page/BookDetail";
 
 function App() {
     return (
@@ -22,6 +24,8 @@ function App() {
                     path="/resetpassword/:token"
                     element={<ResetPassword />}
                 />
+                <Route path="/category" element={<Category />} />
+                <Route path="/book/:bookId" element={<BookDetail />} />
             </Routes>
             <Footer />
         </>

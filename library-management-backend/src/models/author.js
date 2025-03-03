@@ -9,12 +9,10 @@ const authorSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    writenBook: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Book",
-        },
-    ],
+    writenBook: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Book",
+    },
 });
 
 const Author = mongoose.model("Author", authorSchema);
