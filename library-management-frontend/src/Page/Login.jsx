@@ -3,7 +3,7 @@ import {
     loginAPICALL,
     saveLoggedInUser,
     storeToken,
-} from "../../Services/authenticateService";
+} from "../Services/authenticateService";
 import { useNavigate } from "react-router-dom";
 
 function Login() {
@@ -15,7 +15,8 @@ function Login() {
 
     const naviage = useNavigate();
 
-    const handleLogin = (user) => {
+    const handleLogin = (user, e) => {
+        e.preventDefault();
         loginAPICALL(user.usernameOrEmail, user.password)
             .then((response) => {
                 const token = "Bearer " + response.data.token;
@@ -36,7 +37,7 @@ function Login() {
             });
     };
     return (
-        <div className="bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8 mt-20">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
                     <div className="text-center mb-8">
@@ -169,7 +170,7 @@ function Login() {
                         <button
                             type="submit"
                             className="w-full flex justify-center py-2 px-4 sm:py-3 border border-transparent rounded-lg shadow-sm text-sm sm:text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                            onClick={() => handleLogin(user)}
+                            onClick={(e) => handleLogin(user, e)}
                         >
                             <span>Sign In</span>
                         </button>

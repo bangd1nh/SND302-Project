@@ -11,7 +11,7 @@ function Navbar() {
         navigate("/login");
     };
     return (
-        <header className="text-gray-700 body-font border-b border-gray-200">
+        <header className="text-gray-700 body-font border-b border-gray-200 fixed top-0 left-0 right-0 bg-white z-50">
             <div className="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
                 <a
                     className="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0"
@@ -32,7 +32,9 @@ function Navbar() {
                     <span className="ml-3 text-xl">TAILBLOCKS</span>
                 </a>
                 <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-                    <a className="mr-5 hover:text-gray-900">First Link</a>
+                    <a href="/category" className="mr-5 hover:text-gray-900">
+                        Category
+                    </a>
                     <a className="mr-5 hover:text-gray-900">Second Link</a>
                     <a className="mr-5 hover:text-gray-900">Third Link</a>
                     <a className="mr-5 hover:text-gray-900">Fourth Link</a>
@@ -40,7 +42,7 @@ function Navbar() {
                 {isAuth ? (
                     <a
                         href="/login"
-                        className="text-white inline-flex items-center bg-red-600 border-0 py-1 px-3 focus:outline-none hover:bg-red-800 rounded text-base mt-4 md:mt-0 transition-all duration-500"
+                        className="text-white inline-flex items-center bg-indigo-500 border-0 py-1 px-3 focus:outline-none hover:bg-indigo-700 rounded text-base mt-4 md:mt-0 transition-all duration-500"
                         onClick={() => handleLogout()}
                     >
                         Logout
@@ -59,7 +61,7 @@ function Navbar() {
                 ) : (
                     <a
                         href="/login"
-                        className="inline-flex items-center bg-gray-200 border-0 py-1 px-3 focus:outline-none hover:bg-gray-300 rounded text-base mt-4 md:mt-0"
+                        className="inline-flex items-center bg-indigo-500 border-0 py-1 px-3 focus:outline-none hover:bg-indigo-700 rounded text-base mt-4 md:mt-0 text-white font-semibold"
                     >
                         Login
                         <svg

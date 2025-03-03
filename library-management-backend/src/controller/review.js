@@ -27,8 +27,8 @@ review.get("/:bookId", async (req, res) => {
 
 review.post(
     "/",
-    authenticateForAdminUser,
-    authenticateTokenForUser,
+    // authenticateForAdminUser,
+    // authenticateTokenForUser,
     async (req, res) => {
         const { bookId, userId, rating, reviewText } = req.body;
         const result = await postReview(bookId, userId, rating, reviewText);
@@ -50,13 +50,17 @@ review.put(
 
 review.delete(
     "/:reviewId",
-    authenticateForAdminUser,
-    matchUserId,
+    // authenticateForAdminUser,
+    // matchUserId,
     async (req, res) => {
         const { reviewId } = req.params;
         const result = await deleteReview(reviewId);
         res.status(result.code).send(result.payload);
     }
 );
+
+review.get("/:bookId", (req, res) => {
+    const { bookId } = req.params.bookId;
+});
 
 export default review;

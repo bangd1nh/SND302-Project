@@ -20,7 +20,7 @@ book.get("/:bookId", async (req, res) => {
     res.status(result.code).send(result.payload);
 });
 
-book.post("/", authenticateForAdminUser, async (req, res) => {
+book.post("/", async (req, res) => {
     const { title, categoryId, authorId, description, status, imgUrl } =
         req.body;
     const book = {
@@ -51,7 +51,7 @@ book.put("/:bookId", authenticateForAdminUser, async (req, res) => {
     res.status(result.code).send(result.payload);
 });
 
-book.delete("/:bookId", authenticateForAdminUser, async (req, res) => {
+book.delete("/:bookId", async (req, res) => {
     const bookId = req.params.bookId;
     const result = await deleteBookByBookId(bookId);
     res.status(result.code).send(result.payload);
