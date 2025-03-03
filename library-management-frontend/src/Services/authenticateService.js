@@ -47,3 +47,8 @@ export const checkResetToken = (token) =>
 
 export const forgotPassword = (token, body) =>
     axios.post(AUTH_REST_API_BASE_URL + "/forgotPassword/" + token, body);
+
+export const getLoggedInUser = () => {
+    const username = sessionStorage.getItem("authenticatedUser");
+    return username;
+};

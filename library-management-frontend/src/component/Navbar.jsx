@@ -1,5 +1,9 @@
 import React from "react";
-import { isUserLoggedIn, logout } from "../Services/authenticateService";
+import {
+    getLoggedInUser,
+    isUserLoggedIn,
+    logout,
+} from "../Services/authenticateService";
 import { useNavigate } from "react-router-dom";
 
 function Navbar() {
@@ -29,20 +33,32 @@ function Navbar() {
                     >
                         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
                     </svg>
-                    <span className="ml-3 text-xl">TAILBLOCKS</span>
+                    <span className="ml-3 text-xl">Library Management</span>
                 </a>
                 <nav className="md:ml-auto flex flex-wrap items-center text-base justify-center">
-                    <a href="/category" className="mr-5 hover:text-gray-900">
+                    <a
+                        href="/category"
+                        className="mr-5 hover:text-gray-900 font-semibold text-gray-500 duration-300"
+                    >
                         Category
                     </a>
-                    <a className="mr-5 hover:text-gray-900">Second Link</a>
-                    <a className="mr-5 hover:text-gray-900">Third Link</a>
-                    <a className="mr-5 hover:text-gray-900">Fourth Link</a>
+                    {isAuth ? (
+                        <a
+                            href="/"
+                            className="mr-5 hover:text-gray-900 font-semibold text-gray-500 duration-300"
+                        >
+                            {getLoggedInUser()}
+                        </a>
+                    ) : (
+                        <a className="mr-5 hover:text-gray-900 font-semibold text-gray-500 duration-300">
+                            Third Link
+                        </a>
+                    )}
                 </nav>
                 {isAuth ? (
                     <a
                         href="/login"
-                        className="text-white inline-flex items-center bg-indigo-500 border-0 py-1 px-3 focus:outline-none hover:bg-indigo-700 rounded text-base mt-4 md:mt-0 transition-all duration-500"
+                        className="text-white inline-flex items-center bg-indigo-500 border-0 py-1 px-3 focus:outline-none hover:bg-indigo-700 rounded text-base mt-4 md:mt-0 transition-all duration-500 font-semibold"
                         onClick={() => handleLogout()}
                     >
                         Logout

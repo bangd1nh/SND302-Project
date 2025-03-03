@@ -13,6 +13,7 @@ function BookDetail() {
     const { bookId } = useParams();
     const [favorited, setFavorited] = useState(false);
     const userId = sessionStorage.getItem("userId");
+    const [rate, setRate] = useState(0);
     const [reviewRequest, setReviewRequest] = useState({
         bookId: bookId,
         userId: sessionStorage.getItem("userId"),
@@ -86,7 +87,7 @@ function BookDetail() {
     };
 
     const rating = () => {
-        if (!review || review.length === 0) return 0; // Kiểm tra review có tồn tại không
+        if (!review || review.length === 0) return 0;
         const sum = review.reduce(
             (accumulator, currentValue) => accumulator + currentValue.rating,
             0
@@ -244,6 +245,7 @@ function BookDetail() {
                     <div>
                         {review &&
                             review.map((r) => {
+                                console.log(r);
                                 return (
                                     <div
                                         className="flex flex-col"
@@ -252,7 +254,7 @@ function BookDetail() {
                                         <div className="border rounded-md p-3 ml-3 my-3">
                                             <div className="flex gap-3 items-center">
                                                 <img
-                                                    src={r.imgUrl}
+                                                    src={r.userId.imageUrl}
                                                     className="object-cover w-8 h-8 rounded-full
                             border-2 border-emerald-400  shadow-emerald-400
                             "
