@@ -37,6 +37,8 @@ const UserSchema = mongoose.Schema({
     },
     imageUrl: {
         type: String,
+        default:
+            "https://res.cloudinary.com/dprrvtlt6/image/upload/v1740735827/samples/look-up.jpg",
     },
     verify: {
         type: Boolean,
