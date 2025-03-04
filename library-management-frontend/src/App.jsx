@@ -11,25 +11,101 @@ import ResetPassword from "./Page/ResetPassword";
 import Category from "./Page/Category";
 import BookDetail from "./Page/BookDetail";
 import UserProfile from "./Page/UserProfile";
+import Admin from "./Page/Admin";
+import AdminSideBar from "./component/AdminSideBar";
+import { isAdminUser, isUserLoggedIn } from "./Services/authenticateService";
 
 function App() {
+    function AuthenticatedRoute({ children }) {
+        const isAuth = isUserLoggedIn();
+
+        if (isAuth && isAdminUser()) {
+            return children;
+        }
+
+        return <Navigate to="/login" />;
+    }
     return (
         <>
-            <Navbar />
             <Routes>
-                <Route path="/" element={<LandingPage />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/resetpassword" element={<ForgotPassword />} />
+                <Route
+                    path="/"
+                    element={
+                        <>
+                            <Navbar />
+                            <LandingPage />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/login"
+                    element={
+                        <>
+                            <Navbar />
+                            <Login />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/register"
+                    element={
+                        <>
+                            <Navbar />
+                            <Register />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/resetpassword"
+                    element={
+                        <>
+                            <Navbar />
+                            <ForgotPassword />
+                            <Footer />
+                        </>
+                    }
+                />
                 <Route
                     path="/resetpassword/:token"
-                    element={<ResetPassword />}
+                    element={
+                        <>
+                            <Navbar />
+                            <ResetPassword />
+                            <Footer />
+                        </>
+                    }
                 />
                 <Route path="/category" element={<Category />} />
                 <Route path="/book/:bookId" element={<BookDetail />} />
                 <Route path="/user/:userId" element={<UserProfile />} />
+                <Route
+                    path="/admin/*"
+                    element={
+                        <AuthenticatedRoute>
+                            <Routes>
+                                <Route
+                                    path="/"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <div className="">
+                                                <AdminSideBar />
+                                                <div className="ml-64">
+                                                    <Admin />
+                                                    <Footer />
+                                                </div>
+                                            </div>
+                                        </>
+                                    }
+                                />
+                            </Routes>
+                        </AuthenticatedRoute>
+                    }
+                />
             </Routes>
-            <Footer />
         </>
     );
 }
