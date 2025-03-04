@@ -184,7 +184,7 @@ function BookDetail() {
                                 </span>
                             </div>
                             <p className="font-medium">
-                                author: {book.authorId.authorName}
+                                author: {book.authorName}
                             </p>
                             <p className="font-medium">status: {book.status}</p>
                             <p className="leading-relaxed">

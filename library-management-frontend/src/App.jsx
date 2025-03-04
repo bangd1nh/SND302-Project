@@ -14,6 +14,7 @@ import UserProfile from "./Page/UserProfile";
 import Admin from "./Page/Admin";
 import AdminSideBar from "./component/AdminSideBar";
 import { isAdminUser, isUserLoggedIn } from "./Services/authenticateService";
+import Books from "./component/Books";
 
 function App() {
     function AuthenticatedRoute({ children }) {
@@ -54,6 +55,16 @@ function App() {
                         <>
                             <Navbar />
                             <Register />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/books"
+                    element={
+                        <>
+                            <Navbar />
+                            <Books />
                             <Footer />
                         </>
                     }
