@@ -14,7 +14,7 @@ import UserProfile from "./Page/UserProfile";
 import Admin from "./Page/Admin";
 import AdminSideBar from "./component/AdminSideBar";
 import { isAdminUser, isUserLoggedIn } from "./Services/authenticateService";
-
+import Books from "./component/Books";
 function App() {
     function AuthenticatedRoute({ children }) {
         const isAuth = isUserLoggedIn();
@@ -99,6 +99,16 @@ function App() {
                     }
                 />
                 <Route path="/user/:userId" element={<UserProfile />} />
+                <Route
+                    path="/books"
+                    element={
+                        <>
+                            <Navbar />
+                            <Books />
+                            <Footer />
+                        </>
+                    }
+                />
                 <Route
                     path="/admin/*"
                     element={

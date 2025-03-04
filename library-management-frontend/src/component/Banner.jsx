@@ -53,7 +53,7 @@ function Banner() {
 
                         <button
                             className="ml-4 inline-flex text-gray-700 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded text-lg"
-                            onClick={() => navigate()}
+                            onClick={() => navigate("/books")}
                         >
                             Browse now
                         </button>
