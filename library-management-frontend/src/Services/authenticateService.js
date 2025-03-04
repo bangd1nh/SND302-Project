@@ -52,3 +52,12 @@ export const getLoggedInUser = () => {
     const username = sessionStorage.getItem("authenticatedUser");
     return username;
 };
+
+export const isAdminUser = () => {
+    let role = sessionStorage.getItem("role");
+    if (role != null && role === "admin") {
+        return true;
+    } else {
+        return false;
+    }
+};
