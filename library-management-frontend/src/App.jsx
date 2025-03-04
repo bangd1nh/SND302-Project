@@ -78,9 +78,36 @@ function App() {
                         </>
                     }
                 />
-                <Route path="/category" element={<Category />} />
-                <Route path="/book/:bookId" element={<BookDetail />} />
-                <Route path="/user/:userId" element={<UserProfile />} />
+                <Route
+                    path="/category"
+                    element={
+                        <>
+                            <Navbar />
+                            <Category />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/book/:bookId"
+                    element={
+                        <>
+                            <Navbar />
+                            <BookDetail />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/user/:userId"
+                    element={
+                        <>
+                            <Navbar />
+                            <UserProfile />
+                            <Footer />
+                        </>
+                    }
+                />
                 <Route
                     path="/admin/*"
                     element={
