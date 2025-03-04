@@ -1,5 +1,6 @@
 import express from "express";
 import {
+    countUser,
     getUserByUserId,
     updateUserByUserId,
     uploadUserProfileImage,

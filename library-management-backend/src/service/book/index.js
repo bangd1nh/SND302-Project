@@ -127,3 +127,7 @@ export const deleteBookByBookId = async (bookId) => {
         payload: "can not find this book",
     };
 };
+
+export const countBook = async () => {
+    return await Book.countDocuments();
+};

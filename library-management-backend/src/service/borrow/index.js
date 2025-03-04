@@ -202,3 +202,7 @@ export const deleteBorrow = async (borrowId) => {
         return { code: 500, payload: error.message };
     }
 };
+
+export const countBrrow = async () => {
+    return await Borrow.countDocuments();
+};

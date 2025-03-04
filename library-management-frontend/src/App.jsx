@@ -98,7 +98,17 @@ function App() {
                         </>
                     }
                 />
-                <Route path="/user/:userId" element={<UserProfile />} />
+                <Route
+                    path="/user/:userId"
+                    element={
+                        <>
+                            <Navbar />
+                            <UserProfile />
+                            <Footer />
+                        </>
+                    }
+                />
+
                 <Route
                     path="/admin/*"
                     element={
