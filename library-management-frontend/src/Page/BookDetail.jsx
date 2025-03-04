@@ -110,8 +110,18 @@ function BookDetail() {
             setShowLoginModal(true);
             return;
         }
-        // Logic for borrowing the book
-        alert("Book borrowed successfully!");
+        const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const updatedCartItems = storedCartItems.map((item) => {
+            if (item._id === book._id) {
+                return { ...item, quantity: item.quantity + 1 };
+            }
+            return item;
+        });
+        if (!updatedCartItems.find((item) => item._id === book._id)) {
+            updatedCartItems.push({ ...book, quantity: 1 });
+        }
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+        navigate("/cart");
     };
 
     const handleAddToCartButton = () => {
@@ -120,7 +130,17 @@ function BookDetail() {
             setShowLoginModal(true);
             return;
         }
-        // Logic for adding the book to the cart
+        const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const updatedCartItems = storedCartItems.map((item) => {
+            if (item._id === book._id) {
+                return { ...item, quantity: item.quantity + 1 };
+            }
+            return item;
+        });
+        if (!updatedCartItems.find((item) => item._id === book._id)) {
+            updatedCartItems.push({ ...book, quantity: 1 });
+        }
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
         alert("Book added to cart successfully!");
     };
 
