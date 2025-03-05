@@ -4,13 +4,13 @@ import {
     getAllAuthor,
     getAuthorById,
     insertAuthor,
-} from "../service/author";
+} from "../service/author/index.js";
 
 const author = express.Router();
 
 author.get("/", async (req, res) => {
     const result = await getAllAuthor();
-    res.status(result.status).send(result.payload);
+    res.status(result.code).send(result.payload);
 });
 
 author.get("/:authorId", async (req, res) => {
@@ -35,3 +35,5 @@ author.delete("/:authorId", async (req, res) => {
     const result = await deleteAuthorById(authorId);
     res.status(result.code).send(result.payload);
 });
+
+export default author;

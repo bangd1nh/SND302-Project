@@ -10,7 +10,7 @@ import { authenticateForAdminUser } from "../middleware/index.js";
 
 const book = express.Router();
 
-book.get("/", async (req, res) => {
+book.get("/", authenticateForAdminUser, async (req, res) => {
     const result = await getAllBooks();
     res.status(result.code).send(result.payload);
 });
@@ -54,6 +54,7 @@ book.put("/:bookId", authenticateForAdminUser, async (req, res) => {
 book.delete("/:bookId", async (req, res) => {
     const bookId = req.params.bookId;
     const result = await deleteBookByBookId(bookId);
+    console.log(result);
     res.status(result.code).send(result.payload);
 });
 

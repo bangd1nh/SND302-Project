@@ -14,6 +14,8 @@ import UserProfile from "./Page/UserProfile";
 import Admin from "./Page/Admin";
 import AdminSideBar from "./component/AdminSideBar";
 import { isAdminUser, isUserLoggedIn } from "./Services/authenticateService";
+import BookTable from "./component/BookTable";
+import AdminBookDetail from "./Page/AdminBookDetail";
 
 function App() {
     function AuthenticatedRoute({ children }) {
@@ -125,6 +127,32 @@ function App() {
                                                     <Admin />
                                                     <Footer />
                                                 </div>
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/book"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64">
+                                                <BookTable />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/book/:bookId"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <AdminBookDetail />
+                                                <Footer />
                                             </div>
                                         </>
                                     }
