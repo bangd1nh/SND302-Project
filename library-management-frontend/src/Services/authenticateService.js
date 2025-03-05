@@ -12,6 +12,10 @@ export const storeToken = (token) => {
     localStorage.setItem("token", token);
 };
 
+export const getToken = () => {
+    return localStorage.getItem("token");
+};
+
 export const saveLoggedInUser = (user) => {
     sessionStorage.setItem("authenticatedUser", user.email);
     sessionStorage.setItem("userId", user.userId);
@@ -61,3 +65,18 @@ export const isAdminUser = () => {
         return false;
     }
 };
+
+axios.interceptors.request.use(
+    function (config) {
+        const token = getToken();
+
+        if (token) {
+            config.headers["Authorization"] = token;
+        }
+        return config;
+    },
+    function (error) {
+        // Do something with request error
+        return Promise.reject(error);
+    }
+);

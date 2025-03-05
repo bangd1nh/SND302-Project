@@ -1,7 +1,7 @@
-import Author from "../../models/author";
+import Author from "../../models/author.js";
 
 export const getAllAuthor = async () => {
-    const result = await Author.find().populate("book");
+    const result = await Author.find();
     return {
         code: 200,
         payload: result,
