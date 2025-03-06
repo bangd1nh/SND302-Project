@@ -13,6 +13,10 @@ const authorSchema = mongoose.Schema({
         type: [mongoose.Schema.Types.ObjectId],
         ref: "Book",
     },
+    imgUrl: {
+        type: String,
+        default: "",
+    },
 });
 
 const Author = mongoose.model("Author", authorSchema);

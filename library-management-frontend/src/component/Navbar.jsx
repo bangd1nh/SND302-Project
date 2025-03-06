@@ -43,6 +43,12 @@ function Navbar() {
                     >
                         Category
                     </a>
+                    <a
+                        href="/author"
+                        className="mr-5 hover:text-gray-900 font-semibold text-gray-500 duration-300"
+                    >
+                        Authors
+                    </a>
                     {isAuth ? (
                         <a
                             href={`/user/${getUserId()}`}
