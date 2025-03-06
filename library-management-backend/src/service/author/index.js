@@ -9,7 +9,11 @@ export const getAllAuthor = async () => {
 };
 
 export const getAuthorById = async (authorId) => {
-    const result = await Author.findById(authorId).populate("book");
+    const result = await Author.findById(authorId)
+        .populate({
+            path: "writenBook",
+        })
+        .select("categoryName");
     if (result) {
         return {
             code: 200,
