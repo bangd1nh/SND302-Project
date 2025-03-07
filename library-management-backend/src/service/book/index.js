@@ -12,7 +12,7 @@ cloudinary.config({
 
 export const getAllBooks = async () => {
     try {
-        const result = await Book.find()
+        const result = await Book.find({ deleted: false })
             .populate({ path: "categoryId", select: "categoryName" })
             .populate({ path: "authorId", select: "authorName" });
         return {
@@ -106,7 +106,9 @@ export const deleteBookByBookId = async (bookId) => {
             }
         );
         if (authorResult && categoryResult) {
-            const deleteBook = await Book.findByIdAndDelete(bookId);
+            const deleteBook = await Book.findByIdAndUpdate(bookId, {
+                deleted: true,
+            });
             return {
                 code: 200,
                 payload: {
@@ -126,4 +128,8 @@ export const deleteBookByBookId = async (bookId) => {
         code: 404,
         payload: "can not find this book",
     };
+};
+
+export const countBook = async () => {
+    return await Book.countDocuments();
 };

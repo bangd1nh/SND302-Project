@@ -34,6 +34,10 @@ const bookSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    deleted: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const Book = mongoose.model("Book", bookSchema);

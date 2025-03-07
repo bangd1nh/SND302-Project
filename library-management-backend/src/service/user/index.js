@@ -48,3 +48,8 @@ export const updateUserByUserId = async (userId, userProfile) => {
         payload: result,
     };
 };
+
+export const countUser = async () => {
+    const result = await User.countDocuments();
+    return result;
+};

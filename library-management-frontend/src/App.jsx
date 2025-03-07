@@ -16,6 +16,9 @@ import AdminSideBar from "./component/AdminSideBar";
 import { isAdminUser, isUserLoggedIn } from "./Services/authenticateService";
 import BookPage from "./Page/BookPage";
 import CartPage from "./Page/cartPage";
+import BookTable from "./component/BookTable";
+import AdminBookDetail from "./Page/AdminBookDetail";
+import Author from "./Page/Author";
 
 function App() {
     function AuthenticatedRoute({ children }) {
@@ -111,6 +114,16 @@ function App() {
                     }
                 />
                 <Route
+                    path="/author"
+                    element={
+                        <>
+                            <Navbar />
+                            <Author />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
                     path="/book/:bookId"
                     element={
                         <>
@@ -120,7 +133,17 @@ function App() {
                         </>
                     }
                 />
-                <Route path="/user/:userId" element={<UserProfile />} />
+                <Route
+                    path="/user/:userId"
+                    element={
+                        <>
+                            <Navbar />
+                            <UserProfile />
+                            <Footer />
+                        </>
+                    }
+                />
+
                 <Route
                     path="/admin/*"
                     element={
@@ -137,6 +160,32 @@ function App() {
                                                     <Admin />
                                                     <Footer />
                                                 </div>
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/book"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64">
+                                                <BookTable />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/book/:bookId"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <AdminBookDetail />
+                                                <Footer />
                                             </div>
                                         </>
                                     }

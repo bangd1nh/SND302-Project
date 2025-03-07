@@ -5,6 +5,7 @@ import {
     logout,
 } from "../Services/authenticateService";
 import { useNavigate } from "react-router-dom";
+import { getUserId } from "../Services/userService";
 
 function Navbar() {
     const isAuth = isUserLoggedIn();
@@ -49,9 +50,15 @@ function Navbar() {
                     >
                         Category
                     </a>
+                    <a
+                        href="/author"
+                        className="mr-5 hover:text-gray-900 font-semibold text-gray-500 duration-300"
+                    >
+                        Authors
+                    </a>
                     {isAuth ? (
                         <a
-                            href="/"
+                            href={`/user/${getUserId()}`}
                             className="mr-5 hover:text-gray-900 font-semibold text-gray-500 duration-300"
                         >
                             {getLoggedInUser()}
