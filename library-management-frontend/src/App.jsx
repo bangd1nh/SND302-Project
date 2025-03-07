@@ -14,6 +14,8 @@ import UserProfile from "./Page/UserProfile";
 import Admin from "./Page/Admin";
 import AdminSideBar from "./component/AdminSideBar";
 import { isAdminUser, isUserLoggedIn } from "./Services/authenticateService";
+import BookPage from "./Page/BookPage";
+import CartPage from "./Page/cartPage";
 import BookTable from "./component/BookTable";
 import AdminBookDetail from "./Page/AdminBookDetail";
 import Author from "./Page/Author";
@@ -57,6 +59,26 @@ function App() {
                         <>
                             <Navbar />
                             <Register />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/books"
+                    element={
+                        <>
+                            <Navbar />
+                            <BookPage />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/cart"
+                    element={
+                        <>
+                            <Navbar />
+                            <CartPage />
                             <Footer />
                         </>
                     }
