@@ -13,7 +13,8 @@ function Navbar() {
     const [cartItemsCount, setCartItemsCount] = useState(0);
 
     useEffect(() => {
-        const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const storedCartItems =
+            JSON.parse(localStorage.getItem("cartItems")) || [];
         setCartItemsCount(storedCartItems.length);
     }, []);
 
@@ -56,6 +57,12 @@ function Navbar() {
                     >
                         Authors
                     </a>
+                    <a
+                        href="/books"
+                        className="mr-5 hover:text-gray-900 font-semibold text-gray-500 duration-300"
+                    >
+                        Books
+                    </a>
                     {isAuth ? (
                         <a
                             href={`/user/${getUserId()}`}
@@ -64,9 +71,7 @@ function Navbar() {
                             {getLoggedInUser()}
                         </a>
                     ) : (
-                        <a className="mr-5 hover:text-gray-900 font-semibold text-gray-500 duration-300">
-                            Third Link
-                        </a>
+                        <></>
                     )}
                 </nav>
                 <div className="relative">

@@ -7,17 +7,20 @@ function CartPage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const storedCartItems =
+            JSON.parse(localStorage.getItem("cartItems")) || [];
         setCartItems(storedCartItems);
     }, []);
 
     const handleRemoveProduct = (productId) => {
-        const updatedCartItems = cartItems.map((item) => {
-            if (item._id === productId) {
-                return { ...item, quantity: item.quantity - 1 };
-            }
-            return item;
-        }).filter(item => item.quantity > 0);
+        const updatedCartItems = cartItems
+            .map((item) => {
+                if (item._id === productId) {
+                    return { ...item, quantity: item.quantity - 1 };
+                }
+                return item;
+            })
+            .filter((item) => item.quantity > 0);
         setCartItems(updatedCartItems);
         localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     };
@@ -27,7 +30,10 @@ function CartPage() {
         localStorage.setItem("cartItems", JSON.stringify([]));
     };
 
-    const totalAmount = cartItems.reduce((total, item) => total + item.quantity, 0);
+    const totalAmount = cartItems.reduce(
+        (total, item) => total + item.quantity,
+        0
+    );
 
     return (
         <div className="bg-white pt-20">
@@ -38,7 +44,9 @@ function CartPage() {
 
                 {cartItems.length === 0 ? (
                     <div className="mt-6">
-                        <p className="text-lg text-gray-500">Your cart is empty.</p>
+                        <p className="text-lg text-gray-500">
+                            Your cart is empty.
+                        </p>
                         <button
                             className="mt-4 text-base font-semibold text-indigo-600 hover:text-indigo-500"
                             onClick={() => navigate("/books")}
@@ -64,23 +72,34 @@ function CartPage() {
                                             <div className="flex justify-between text-base font-medium text-gray-900">
                                                 <h3>
                                                     <button
-                                                        onClick={() => navigate(`/book/${item._id}`)}
+                                                        onClick={() =>
+                                                            navigate(
+                                                                `/book/${item._id}`
+                                                            )
+                                                        }
                                                         className="text-indigo-600 hover:text-indigo-500"
                                                     >
                                                         {item.title}
                                                     </button>
                                                 </h3>
                                             </div>
-                                            <p className="mt-1 text-sm text-gray-500">Author: {item.authorName}</p>
-                                            <p className="mt-1 text-sm text-gray-500">Status: {item.status}</p>
+                                            <p className="mt-1 text-sm text-gray-500">
+                                                Author: {item.authorName}
+                                            </p>
+                                            <p className="mt-1 text-sm text-gray-500">
+                                                Status: {item.status}
+                                            </p>
                                         </div>
                                         <div className="flex flex-1 items-end justify-between text-sm">
                                             <div className="flex items-center">
-                                                <span className="mr-2">Quantity: {item.quantity}</span>
                                                 <button
                                                     type="button"
                                                     className="font-medium text-indigo-600 hover:text-indigo-500"
-                                                    onClick={() => handleRemoveProduct(item._id)}
+                                                    onClick={() =>
+                                                        handleRemoveProduct(
+                                                            item._id
+                                                        )
+                                                    }
                                                 >
                                                     Remove
                                                 </button>
