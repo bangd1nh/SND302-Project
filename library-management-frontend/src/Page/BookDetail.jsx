@@ -110,7 +110,8 @@ function BookDetail() {
             setShowLoginModal(true);
             return;
         }
-        const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+        const storedCartItems =
+            JSON.parse(localStorage.getItem("cartItems")) || [];
         const updatedCartItems = storedCartItems.map((item) => {
             if (item._id === book._id) {
                 return { ...item, quantity: item.quantity + 1 };
@@ -126,22 +127,23 @@ function BookDetail() {
 
     const handleAddToCartButton = () => {
         if (!isUserLoggedIn()) {
-            setActionAfterLogin(() => handleAddToCartButton);
             setShowLoginModal(true);
             return;
         }
-        const storedCartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-        const updatedCartItems = storedCartItems.map((item) => {
+        let exist = false;
+        const storedCartItems =
+            JSON.parse(localStorage.getItem("cartItems")) || [];
+        storedCartItems.map((item) => {
             if (item._id === book._id) {
-                return { ...item, quantity: item.quantity + 1 };
+                alert("book already added to cart");
+                exist = true;
             }
-            return item;
         });
-        if (!updatedCartItems.find((item) => item._id === book._id)) {
-            updatedCartItems.push({ ...book, quantity: 1 });
+        if (!exist) {
+            storedCartItems.push({ ...book });
+            localStorage.setItem("cartItems", JSON.stringify(storedCartItems));
+            alert("Book added to cart successfully!");
         }
-        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-        alert("Book added to cart successfully!");
     };
 
     const handleContinue = () => {
@@ -406,10 +408,14 @@ function BookDetail() {
             </div>
 
             {showLoginModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
                     <div className="bg-white p-6 rounded-lg shadow-lg">
-                        <h2 className="text-xl font-bold mb-4">You are not logged in</h2>
-                        <p className="mb-4">Please log in to continue with this action.</p>
+                        <h2 className="text-xl font-bold mb-4">
+                            You are not logged in
+                        </h2>
+                        <p className="mb-4">
+                            Please log in to continue with this action.
+                        </p>
                         <div className="flex justify-end">
                             <button
                                 onClick={() => navigate("/login")}

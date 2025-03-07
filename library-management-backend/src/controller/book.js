@@ -10,7 +10,7 @@ import { authenticateForAdminUser } from "../middleware/index.js";
 
 const book = express.Router();
 
-book.get("/", authenticateForAdminUser, async (req, res) => {
+book.get("/", async (req, res) => {
     const result = await getAllBooks();
     res.status(result.code).send(result.payload);
 });
