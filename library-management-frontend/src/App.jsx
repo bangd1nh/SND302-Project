@@ -19,6 +19,9 @@ import CartPage from "./Page/cartPage";
 import BookTable from "./component/BookTable";
 import AdminBookDetail from "./Page/AdminBookDetail";
 import Author from "./Page/Author";
+import AdminCategory from "./Page/AdminCategory";
+import CategoryComponent from "./Page/CategoryComponent";
+import BookForm from "./component/BookForm";
 
 function App() {
     function AuthenticatedRoute({ children }) {
@@ -30,6 +33,7 @@ function App() {
 
         return <Navigate to="/login" />;
     }
+
     return (
         <>
             <Routes>
@@ -172,6 +176,45 @@ function App() {
                                             <AdminSideBar />
                                             <div className="ml-64">
                                                 <BookTable />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/category"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64">
+                                                <AdminCategory />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/category/:categoryId"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64">
+                                                <CategoryComponent />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/book/add-new-book"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <BookForm />
                                                 <Footer />
                                             </div>
                                         </>
