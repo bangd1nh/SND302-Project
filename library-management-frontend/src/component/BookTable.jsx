@@ -3,12 +3,17 @@ import React, { useEffect, useState } from "react";
 import { deleteBookById, getAllBooks } from "../Services/bookService";
 import { Link } from "react-router-dom";
 
-function BookTable({ data, title }) {
+function BookTable({ data, title, elementId }) {
     const [isEdit, setIsEdit] = useState(false);
 
     const [isConfirm, setIsConfirm] = useState({
         confirm: false,
         bookId: "",
+    });
+
+    const [updatedCategory, setUpdatedCategory] = useState({
+        categoryId: elementId,
+        categoryName: "",
     });
 
     const queryClient = useQueryClient();
@@ -44,7 +49,6 @@ function BookTable({ data, title }) {
         });
 
         data = books;
-        console.log(books);
         if (isLoading) {
             return <div className="mt-20">Loading...</div>;
         }
@@ -70,9 +74,7 @@ function BookTable({ data, title }) {
                         <caption className="p-4 text-lg font-bold text-left text-gray-50 bg-slate-950 rounded-lg m-2 ">
                             {title ? (
                                 <>
-                                    <button
-                                    // onClick={() => setIsEdit(!isEdit)}
-                                    >
+                                    <button onClick={() => setIsEdit(!isEdit)}>
                                         {title}
                                     </button>
                                 </>
@@ -83,7 +85,7 @@ function BookTable({ data, title }) {
                                 <>
                                     <input
                                         type="text"
-                                        className="ms-2 text-sm rounded-md text-black"
+                                        className="ms-2 text-sm rounded-md text-white ps-2"
                                         placeholder="edit this name"
                                         onChange={(e) => {
                                             setUpdatedCategory({
@@ -100,11 +102,11 @@ function BookTable({ data, title }) {
                                     >
                                         submit
                                     </button>
-                                    {errors.categoryName && (
+                                    {/* {errors.categoryName && (
                                         <p className="text-red-500 text-sm mt-1">
                                             {errors.categoryName}
                                         </p>
-                                    )}
+                                    )} */}
                                 </>
                             ) : (
                                 <></>
