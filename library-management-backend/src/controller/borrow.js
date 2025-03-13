@@ -6,6 +6,7 @@ import {
   getBorrowById,
   updateBorrow,
   deleteBorrow,
+  returnBook,
 } from "../service/borrow/index.js";
 import {
   authenticateForAdminUser,
@@ -64,6 +65,13 @@ borrow.delete("/:borrowId", authenticateForAdminUser, async (req, res) => {
   const { borrowId } = req.params;
 
   const result = await deleteBorrow(borrowId);
+  res.status(result.code).send(result.payload);
+});
+
+borrow.put("/return/:borrowId", async (req, res) => {
+  const { borrowId } = req.params;
+
+  const result = await returnBook(borrowId);
   res.status(result.code).send(result.payload);
 });
 
