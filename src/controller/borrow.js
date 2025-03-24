@@ -26,23 +26,42 @@ borrow.get("/:borrowId", authenticateTokenForUser, async (req, res) => {
   res.status(result.code).send(result.payload);
 });
 
-borrow.post("/create", authenticateTokenForUser, async (req, res) => {
+// borrow.post("/create", authenticateTokenForUser, async (req, res) => {
+//   const { userId, booksToBorrow, selectedDueDays } = req.body;
+
+//   console.log("Raw Request Body:", req.body);
+
+//   if (!Array.isArray(booksToBorrow)) {
+//     console.log("booksToBorrow is not an array:", booksToBorrow);
+//     return res.status(400).send({ message: "booksToBorrow must be an array." });
+//   }
+borrow.post("/create", async (req, res) => {
   const { userId, booksToBorrow, selectedDueDays } = req.body;
-
-  console.log("Raw Request Body:", req.body);
-
-  if (!Array.isArray(booksToBorrow)) {
-    console.log("booksToBorrow is not an array:", booksToBorrow);
-    return res.status(400).send({ message: "booksToBorrow must be an array." });
+  console.log("Raw Request Body:", req.body); // Kiểm tra xem body có rỗng không
+  if (!userId || !booksToBorrow || !selectedDueDays) {
+    console.log("Missing required fields:", {
+      userId,
+      booksToBorrow,
+      selectedDueDays,
+    });
+    return res.status(400).json({ payload: "Missing required fields" });
   }
-
   const result = await createBorrowBooks(
     userId,
     booksToBorrow,
     selectedDueDays
   );
-  res.status(result.code).send(result.payload);
+  console.log("Result from createBorrowBooks:", result);
+  res.status(result.code).json({ payload: result.payload });
 });
+
+//   const result = await createBorrowBooks(
+//     userId,
+//     booksToBorrow,
+//     selectedDueDays
+//   );
+//   res.status(result.code).send(result.payload);
+// });
 
 // {
 //   "userId": "67b0ca6fbad788de3dfff845",

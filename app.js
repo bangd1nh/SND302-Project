@@ -8,6 +8,7 @@ import "./src/utils/cronJobs.js";
 const app = express();
 
 app.use(json());
+app.use(express.json());
 app.use(cors());
 app.use(loggingMiddleware);
 app.use(router);
