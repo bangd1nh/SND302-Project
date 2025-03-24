@@ -7,6 +7,7 @@ import {
 } from "../service/user/index.js";
 import { matchUserId } from "../middleware/index.js";
 import multer from "multer";
+import User from "../models/user.js";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage }).single("file");
@@ -44,6 +45,11 @@ user.post("/uploadToCloudinary/:userId", upload, async (req, res) => {
             .status(500)
             .json({ message: "Error uploading image", error: error.message });
     }
+});
+
+user.get("/", async (req, res) => {
+    const result = await User.find();
+    res.status(200).send(result);
 });
 
 export default user;

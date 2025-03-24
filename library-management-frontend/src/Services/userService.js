@@ -18,3 +18,5 @@ export const updateUserImage = (formData, id) =>
             "Content-Type": "multipart/form-data",
         },
     });
+
+export const getAllUser = () => axios.get(USER_REST_API_BASE_URL);

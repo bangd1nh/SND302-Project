@@ -6,3 +6,6 @@ export const getAllAuthor = () => axios.get(AUTHOR_REST_API_BASE_URL);
 
 export const getBookByAuthorId = (authorId) =>
     axios.get(AUTHOR_REST_API_BASE_URL + "/" + authorId);
+
+export const deleteAuthorById = (authorId) =>
+    axios.delete(AUTHOR_REST_API_BASE_URL + "/" + authorId);
