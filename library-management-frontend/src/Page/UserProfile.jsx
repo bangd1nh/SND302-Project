@@ -94,7 +94,7 @@ function UserProfile() {
     };
 
     return (
-        <div className="w-full mt-20">
+        <div className="w-full mt-25">
             <div className="bg-white w-2/3 shadow overflow-hidden sm:rounded-lg mx-auto">
                 <div className="px-4 py-5 sm:px-6">
                     <h3 className="text-center text-lg leading-6 font-medium text-gray-900">

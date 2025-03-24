@@ -22,6 +22,8 @@ import Author from "./Page/Author";
 import AdminCategory from "./Page/AdminCategory";
 import CategoryComponent from "./Page/CategoryComponent";
 import BookForm from "./component/BookForm";
+import UserTable from "./component/UserTable";
+import AuthorTable from "./component/AuthorTable";
 
 function App() {
     function AuthenticatedRoute({ children }) {
@@ -228,6 +230,32 @@ function App() {
                                             <AdminSideBar />
                                             <div className="ml-64 mt-20">
                                                 <AdminBookDetail />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/user"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <UserTable />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/author"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <AuthorTable />
                                                 <Footer />
                                             </div>
                                         </>
