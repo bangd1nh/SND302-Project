@@ -1,7 +1,7 @@
 import Author from "../../models/author.js";
 
 export const getAllAuthor = async () => {
-    const result = await Author.find();
+    const result = await Author.find().populate({ path: "writenBook" });
     return {
         code: 200,
         payload: result,
