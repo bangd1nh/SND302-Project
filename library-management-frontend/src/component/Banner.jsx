@@ -1,6 +1,13 @@
 import React from "react";
+import {
+    getLoggedInUser,
+    isUserLoggedIn,
+} from "../Services/authenticateService";
+import { useNavigate } from "react-router-dom";
+import { getUserId } from "../Services/userService";
 
 function Banner() {
+    const navigate = useNavigate();
     return (
         <section className="text-gray-700 body-font">
             <div className="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
@@ -28,10 +35,26 @@ function Banner() {
                         and a love for learning.
                     </p>
                     <div className="flex justify-center">
-                        <button className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg">
-                            Login
-                        </button>
-                        <button className="ml-4 inline-flex text-gray-700 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded text-lg">
+                        {isUserLoggedIn() ? (
+                            <a
+                                href={`/user/${getUserId()}`}
+                                className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+                            >
+                                hello {getLoggedInUser()}
+                            </a>
+                        ) : (
+                            <a
+                                href="/login"
+                                className="inline-flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded text-lg"
+                            >
+                                Login
+                            </a>
+                        )}
+
+                        <button
+                            className="ml-4 inline-flex text-gray-700 bg-gray-200 border-0 py-2 px-6 focus:outline-none hover:bg-gray-300 rounded text-lg"
+                            onClick={() => navigate("/books")}
+                        >
                             Browse now
                         </button>
                     </div>
@@ -40,7 +63,7 @@ function Banner() {
                     <img
                         className="object-cover object-center rounded"
                         alt="hero"
-                        src="https://dummyimage.com/720x600/edf2f7/a5afbd"
+                        src="/banner.jpg"
                     />
                 </div>
             </div>

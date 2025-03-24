@@ -21,7 +21,7 @@ export const getReviewByBookId = async (id) => {
         const result = await Review.find({ bookId: id })
             .populate({
                 path: "userId",
-                select: "username",
+                select: "username imageUrl",
             })
             .populate({
                 path: "bookId",

@@ -54,6 +54,7 @@ book.put("/:bookId", authenticateForAdminUser, async (req, res) => {
 book.delete("/:bookId", async (req, res) => {
     const bookId = req.params.bookId;
     const result = await deleteBookByBookId(bookId);
+    console.log(result);
     res.status(result.code).send(result.payload);
 });
 

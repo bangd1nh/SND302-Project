@@ -3,6 +3,7 @@ import router from "./src/routes/index.js";
 import connectDB from "./src/config/database.js";
 import cors from "cors";
 import { loggingMiddleware } from "./src/middleware/index.js";
+import "./src/utils/cronJobs.js";
 
 const app = express();
 

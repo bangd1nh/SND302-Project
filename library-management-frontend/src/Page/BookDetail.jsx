@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getBookById } from "../Services/bookService";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -11,14 +11,18 @@ import { isUserLoggedIn } from "../Services/authenticateService";
 
 function BookDetail() {
     const { bookId } = useParams();
+    const navigate = useNavigate();
     const [favorited, setFavorited] = useState(false);
     const userId = sessionStorage.getItem("userId");
+    const [rate, setRate] = useState(0);
     const [reviewRequest, setReviewRequest] = useState({
         bookId: bookId,
         userId: sessionStorage.getItem("userId"),
         rating: 1,
         reviewText: "",
     });
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [actionAfterLogin, setActionAfterLogin] = useState(null);
 
     const {
         data: book,
@@ -63,7 +67,7 @@ function BookDetail() {
                 JSON.stringify(modifiedFavoriteBook)
             );
             setFavorited(false);
-            alert("Book removed to favorite");
+            alert("Book removed from favorite");
         } else {
             favoriteBook.push(book);
             localStorage.setItem("favoriteBook", JSON.stringify(favoriteBook));
@@ -86,7 +90,7 @@ function BookDetail() {
     };
 
     const rating = () => {
-        if (!review || review.length === 0) return 0; // Kiểm tra review có tồn tại không
+        if (!review || review.length === 0) return 0;
         const sum = review.reduce(
             (accumulator, currentValue) => accumulator + currentValue.rating,
             0
@@ -98,6 +102,52 @@ function BookDetail() {
         deleteReviewByUserId(r._id)
             .then((res) => alert("success"))
             .catch((err) => alert(err));
+    };
+
+    const handleBorrowButton = () => {
+        if (!isUserLoggedIn()) {
+            setActionAfterLogin(() => handleBorrowButton);
+            setShowLoginModal(true);
+            return;
+        }
+        const storedCartItems =
+            JSON.parse(localStorage.getItem("cartItems")) || [];
+        const updatedCartItems = storedCartItems.map((item) => {
+            if (item._id === book._id) {
+                return { ...item, quantity: item.quantity + 1 };
+            }
+            return item;
+        });
+        if (!updatedCartItems.find((item) => item._id === book._id)) {
+            updatedCartItems.push({ ...book, quantity: 1 });
+        }
+        localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+        navigate("/cart");
+    };
+
+    const handleAddToCartButton = () => {
+        if (!isUserLoggedIn()) {
+            setShowLoginModal(true);
+            return;
+        }
+        let exist = false;
+        const storedCartItems =
+            JSON.parse(localStorage.getItem("cartItems")) || [];
+        storedCartItems.map((item) => {
+            if (item._id === book._id) {
+                alert("book already added to cart");
+                exist = true;
+            }
+        });
+        if (!exist) {
+            storedCartItems.push({ ...book });
+            localStorage.setItem("cartItems", JSON.stringify(storedCartItems));
+            alert("Book added to cart successfully!");
+        }
+    };
+
+    const handleContinue = () => {
+        setShowLoginModal(false);
     };
 
     return (
@@ -183,7 +233,7 @@ function BookDetail() {
                                 </span>
                             </div>
                             <p className="font-medium">
-                                author: {book.authorId.authorName}
+                                author: {book.authorName}
                             </p>
                             <p className="font-medium">status: {book.status}</p>
                             <p className="leading-relaxed">
@@ -192,14 +242,14 @@ function BookDetail() {
                             <div className="flex justify-between item-center mt-20">
                                 <div className="flex">
                                     <button
-                                        // onClick={() => handleBorrowButton()}
+                                        onClick={handleBorrowButton}
                                         className="flex ml-auto text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-800 rounded mr-2 duration-300"
                                     >
                                         Borrow it now
                                     </button>
                                     <button
+                                        onClick={handleAddToCartButton}
                                         className="flex ml-auto border border-indigo-500  py-2 px-6 focus:outline-none hover:bg-indigo-500 hover:text-white rounded duration-300"
-                                        // onClick={() => handelCart(book)}
                                     >
                                         Add to cart
                                     </button>
@@ -244,6 +294,7 @@ function BookDetail() {
                     <div>
                         {review &&
                             review.map((r) => {
+                                console.log(r);
                                 return (
                                     <div
                                         className="flex flex-col"
@@ -252,7 +303,7 @@ function BookDetail() {
                                         <div className="border rounded-md p-3 ml-3 my-3">
                                             <div className="flex gap-3 items-center">
                                                 <img
-                                                    src={r.imgUrl}
+                                                    src={r.userId.imageUrl}
                                                     className="object-cover w-8 h-8 rounded-full
                             border-2 border-emerald-400  shadow-emerald-400
                             "
@@ -355,6 +406,33 @@ function BookDetail() {
                     )}
                 </div>
             </div>
+
+            {showLoginModal && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50">
+                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                        <h2 className="text-xl font-bold mb-4">
+                            You are not logged in
+                        </h2>
+                        <p className="mb-4">
+                            Please log in to continue with this action.
+                        </p>
+                        <div className="flex justify-end">
+                            <button
+                                onClick={() => navigate("/login")}
+                                className="bg-indigo-500 text-white px-4 py-2 rounded mr-2"
+                            >
+                                Log in
+                            </button>
+                            <button
+                                onClick={handleContinue}
+                                className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+                            >
+                                Continue
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 }

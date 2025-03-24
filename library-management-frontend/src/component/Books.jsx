@@ -10,6 +10,7 @@ function Books({ books }) {
             </div>
         );
     }
+    console.log(books);
     return (
         <section className="text-gray-600 body-font">
             <div className="container px-5 py-24 mx-auto">
@@ -30,13 +31,13 @@ function Books({ books }) {
                                 </div>
                                 <div className="mt-4">
                                     <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1 uppercase book-card__text">
-                                        {b.categoryId.categoryName}
+                                        {b.categoryName}
                                     </h3>
                                     <h2 className="text-gray-900 title-font text-lg font-medium book-card__title">
                                         {b.title}
                                     </h2>
                                     <p className="mt-1 text-md font-semibold  book-card__text">
-                                        Author: {b.authorId.authorName}
+                                        Author: {b.authorName}
                                     </p>
                                     <div className="grid grid-cols-3">
                                         <p className="mt-1 text-md font-semibold col-end-5 book-card__status">

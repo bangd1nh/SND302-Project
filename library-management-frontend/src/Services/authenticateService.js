@@ -12,6 +12,10 @@ export const storeToken = (token) => {
     localStorage.setItem("token", token);
 };
 
+export const getToken = () => {
+    return localStorage.getItem("token");
+};
+
 export const saveLoggedInUser = (user) => {
     sessionStorage.setItem("authenticatedUser", user.email);
     sessionStorage.setItem("userId", user.userId);
@@ -47,3 +51,32 @@ export const checkResetToken = (token) =>
 
 export const forgotPassword = (token, body) =>
     axios.post(AUTH_REST_API_BASE_URL + "/forgotPassword/" + token, body);
+
+export const getLoggedInUser = () => {
+    const username = sessionStorage.getItem("authenticatedUser");
+    return username;
+};
+
+export const isAdminUser = () => {
+    let role = sessionStorage.getItem("role");
+    if (role != null && role === "admin") {
+        return true;
+    } else {
+        return false;
+    }
+};
+
+axios.interceptors.request.use(
+    function (config) {
+        const token = getToken();
+
+        if (token) {
+            config.headers["Authorization"] = token;
+        }
+        return config;
+    },
+    function (error) {
+        // Do something with request error
+        return Promise.reject(error);
+    }
+);
