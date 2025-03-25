@@ -12,7 +12,9 @@ function AuthorTable() {
     });
 
     const [isAddAuthorModalOpen, setIsAddAuthorModalOpen] = useState(false);
-    const [newAuthor, setNewAuthor] = useState({});
+    const [newAuthor, setNewAuthor] = useState({
+        writenBook: [],
+    });
     const queryClient = useQueryClient();
 
     const handleAddAuthor = (e) => {
@@ -20,7 +22,7 @@ function AuthorTable() {
         const formData = new FormData();
         formData.append("authorName", newAuthor.authorName);
         formData.append("description", newAuthor.description);
-        formData.append("book", JSON.stringify(newAuthor.writenBooks));
+        formData.append("writenBook", JSON.stringify(newAuthor.writenBook));
         if (newAuthor.imgFile) {
             formData.append("image", newAuthor.imgFile);
         }
@@ -43,6 +45,7 @@ function AuthorTable() {
                     });
                     setIsAddAuthorModalOpen(false);
                     setNewAuthor({});
+                    console.log(res.data);
                 } else {
                     throw new Error("Failed to add author");
                 }
@@ -89,7 +92,7 @@ function AuthorTable() {
         return <div>...loading</div>;
     }
 
-    console.log(data);
+    console.log(newAuthor);
     return (
         <div className="flex-grow border-2 border-gray-200 border-dashed rounded-lg">
             <div className="relative overflow-x-auto w-full">
@@ -130,7 +133,7 @@ function AuthorTable() {
                                             src={b.imgUrl}
                                             className="h-12 w-12 rounded-4xl object-cover"
                                         />
-                                        <Link to={`/admin/book/${b._id}`}>
+                                        <Link to={`/admin/author/${b._id}`}>
                                             {b.authorName}
                                         </Link>
                                     </th>
@@ -321,13 +324,13 @@ function AuthorTable() {
                                     Written Books
                                 </label>
                                 <select
-                                    multiple
+                                    value={newAuthor.writenBook || []}
                                     className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                    value={newAuthor.writenBooks}
+                                    multiple={true}
                                     onChange={(e) =>
                                         setNewAuthor({
                                             ...newAuthor,
-                                            writenBooks: Array.from(
+                                            writenBook: Array.from(
                                                 e.target.selectedOptions,
                                                 (option) => option.value
                                             ),

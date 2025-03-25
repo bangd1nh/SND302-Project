@@ -1,21 +1,22 @@
-import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useEffect, useState } from "react";
 import { getAllCategory } from "../Services/categoryService";
 import { getAllAuthor } from "../Services/authorService";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function BookForm() {
-    const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const [book, setBook] = useState({
         title: "",
         categoryId: "",
         authorId: "",
-        publisherId: "",
         deleted: false,
         description: "",
-        status: "",
+        status: "NEW",
     });
+    const [processing, setProcessing] = useState(false);
 
     const {
         data: categories,
@@ -23,35 +24,101 @@ function BookForm() {
         isError: categoriesError,
     } = useQuery({
         queryFn: () => getAllCategory().then((res) => res.data),
-        queryKey: ["adminCategory"],
+        queryKey: ["admin_Category"],
+        onSuccess: (data) => {
+            if (data.length > 0) {
+                setBook((prevBook) => ({
+                    ...prevBook,
+                    categoryId: data[0]._id,
+                }));
+            }
+        },
     });
+
     const {
         data: authors,
         isLoading: authorsLoading,
         isError: authorsError,
     } = useQuery({
         queryFn: () => getAllAuthor().then((res) => res.data),
-        queryKey: ["adminAuthor"],
+        queryKey: ["admin_Author"],
+        onSuccess: (data) => {
+            if (data.length > 0) {
+                setBook((prevBook) => ({
+                    ...prevBook,
+                    authorId: data[0]._id,
+                }));
+            }
+        },
     });
 
     const [image, setImage] = useState(null);
+    console.log(book);
+    if (categoriesLoading) {
+        return <div>...loading</div>;
+    }
+    if (authorsLoading) {
+        return <div>...loading</div>;
+    }
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImage(reader.result);
-        };
-        if (file) {
-            reader.readAsDataURL(file);
+    const handleAddBook = (e) => {
+        setProcessing(true);
+        const formData = new FormData();
+        formData.append("title", book.title);
+        formData.append("categoryId", book.categoryId);
+        formData.append("authorId", book.authorId);
+        formData.append("deleted", book.deleted);
+        formData.append("description", book.description);
+        formData.append("status", book.status);
+        if (image) {
+            formData.append("image", image);
         }
+
+        for (let [key, value] of formData.entries()) {
+            console.log(key, value);
+        }
+
+        axios
+            .post("http://localhost:3000/api/book", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then((res) => {
+                if (res.status === 200 || res.status === 201) {
+                    alert("Book added successfully");
+                    queryClient.invalidateQueries({
+                        queryKey: ["BOOKSADMIN"],
+                    });
+                    setBook({
+                        title: "",
+                        categoryId: "",
+                        authorId: "",
+                        publisherId: "",
+                        deleted: false,
+                        description: "",
+                        status: "",
+                    });
+                    setImage(null);
+                    console.log(res.data);
+                } else {
+                    throw new Error("Failed to add book");
+                }
+            })
+            .catch((err) => {
+                console.error("Add book error:", err.response?.data || err);
+                alert(err.response?.data?.message || "Something went wrong");
+            })
+            .finally(() => {
+                setProcessing(false);
+            });
     };
 
     return (
         <div className="bg-gray-100 ">
             <div className="w-full max-w-3xl mx-auto p-8">
-                <div className="bg-white  p-8 rounded-lg shadow-md border border-gray-700">
-                    <h1 className="text-2xl font-bold text-gray-800  mb-4">
+                <div className="bg-white p-8 rounded-lg shadow-md border border-gray-700">
+                    <h1 className="text-2xl font-bold text-gray-800 mb-4">
                         Add New Book
                     </h1>
 
@@ -66,13 +133,13 @@ function BookForm() {
                             type="text"
                             id="address"
                             className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700"
-                            // value={book.description}
                             onChange={(e) =>
                                 setBook({
-                                    ...updateRequest,
+                                    ...book,
                                     title: e.target.value,
                                 })
                             }
+                            disabled={processing}
                         />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -83,18 +150,19 @@ function BookForm() {
                             >
                                 Category
                             </label>
-                            <select className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700">
+                            <select
+                                className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700"
+                                onChange={(e) =>
+                                    setBook({
+                                        ...book,
+                                        categoryId: e.target.value,
+                                    })
+                                }
+                                value={book.categoryId}
+                                disabled={processing}
+                            >
                                 {categories.map((au, index) => (
-                                    <option
-                                        value={au._id}
-                                        key={index}
-                                        onChange={(e) => {
-                                            setBook({
-                                                ...updateRequest,
-                                                categoryId: e.target.value,
-                                            });
-                                        }}
-                                    >
+                                    <option value={au._id} key={index}>
                                         {au.categoryName}
                                     </option>
                                 ))}
@@ -107,19 +175,18 @@ function BookForm() {
                             >
                                 Author Name
                             </label>
-                            <select className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700">
+                            <select
+                                className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700"
+                                onChange={(e) => {
+                                    setBook({
+                                        ...book,
+                                        authorId: e.target.value,
+                                    });
+                                }}
+                                disabled={processing}
+                            >
                                 {authors.map((au, index) => (
-                                    <option
-                                        value={au._id}
-                                        key={index}
-                                        selected={au._id == book.authorId._id}
-                                        onChange={(e) => {
-                                            setBook({
-                                                ...updateRequest,
-                                                authorId: e.target.value,
-                                            });
-                                        }}
-                                    >
+                                    <option value={au._id} key={index}>
                                         {au.authorName}
                                     </option>
                                 ))}
@@ -138,14 +205,14 @@ function BookForm() {
                             type="text"
                             id="address"
                             className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700"
-                            // value={book.description}
                             onChange={(e) =>
                                 setBook({
-                                    ...updateRequest,
+                                    ...book,
                                     description: e.target.value,
                                 })
                             }
                             rows={7}
+                            disabled={processing}
                         />
                     </div>
 
@@ -157,20 +224,20 @@ function BookForm() {
                             >
                                 Status
                             </label>
-                            <select className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700">
-                                <option
-                                    value={"available"}
-                                    // selected={book.status == "available"}
-                                    selected
-                                >
-                                    available
+                            <select
+                                className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700"
+                                onChange={(e) => {
+                                    setBook({
+                                        ...book,
+                                        status: e.target.value,
+                                    });
+                                }}
+                                disabled={processing}
+                            >
+                                <option value={"NEW"} selected>
+                                    NEW
                                 </option>
-                                <option
-                                    value={"borrowed"}
-                                    // selected={book.status == "borrowed"}
-                                >
-                                    borrowed
-                                </option>
+                                <option value={"BORROWED"}>BORROWED</option>
                             </select>
                         </div>
                         <div>
@@ -184,15 +251,18 @@ function BookForm() {
                                 type="text"
                                 id="zip"
                                 className="w-full rounded-lg border-2 py-2 px-3 border-indigo-700"
-                                // value={book.deleted}
                                 value={false}
                                 disabled
                             />
                         </div>
                     </div>
-                    <div className="justify-center flex mt-20">
+                    <div className="justify-center flex mt-4">
                         {image && (
-                            <img src={image} alt="Uploaded" className="h-80" />
+                            <img
+                                src={URL.createObjectURL(image)}
+                                alt="Uploaded Preview"
+                                className="h-80 object-contain"
+                            />
                         )}
                     </div>
 
@@ -200,9 +270,21 @@ function BookForm() {
                         <input
                             type="file"
                             className="bg-indigo-500 px-4 py-2 rounded-lg hover:bg-indigo-700 duration-300 text-white font-semibold"
-                            onChange={handleImageChange}
+                            onChange={(e) => setImage(e.target.files[0])}
+                            disabled={processing}
                         />
                     </div>
+                    <button
+                        onClick={() => handleAddBook()}
+                        className={`mt-4 px-6 py-2 rounded-lg transition duration-300 w-full ${
+                            processing
+                                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
+                                : "bg-indigo-500 text-white hover:bg-indigo-700"
+                        }`}
+                        disabled={processing}
+                    >
+                        {processing ? "Processing..." : "Submit"}
+                    </button>
                 </div>
             </div>
         </div>

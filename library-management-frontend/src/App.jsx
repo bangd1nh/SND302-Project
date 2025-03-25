@@ -24,6 +24,7 @@ import CategoryComponent from "./Page/CategoryComponent";
 import BookForm from "./component/BookForm";
 import UserTable from "./component/UserTable";
 import AuthorTable from "./component/AuthorTable";
+import AdminAuthor from "./Page/AdminAuthor";
 
 function App() {
     function AuthenticatedRoute({ children }) {
@@ -256,6 +257,19 @@ function App() {
                                             <AdminSideBar />
                                             <div className="ml-64 mt-20">
                                                 <AuthorTable />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/author/:authorId"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <AdminAuthor />
                                                 <Footer />
                                             </div>
                                         </>
