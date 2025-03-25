@@ -6,7 +6,6 @@ export const getTopBorrowedBooks = async (startDate, endDate) => {
     console.log("Start Date:", startDate);
     console.log("End Date:", endDate);
 
-    // Sử dụng borrowDate để lọc thay vì startDate/endDate
     const matchStage =
       startDate && endDate
         ? {
@@ -18,8 +17,6 @@ export const getTopBorrowedBooks = async (startDate, endDate) => {
             },
           }
         : {};
-
-    console.log("Match Stage:", JSON.stringify(matchStage));
 
     const pipeline = [
       matchStage,
@@ -33,13 +30,25 @@ export const getTopBorrowedBooks = async (startDate, endDate) => {
         },
       },
       { $unwind: "$bookInfo" },
-      { $group: { _id: "$bookInfo.title", borrowCount: { $sum: 1 } } },
+      {
+        $group: {
+          _id: "$bookInfo._id", // Nhóm theo _id để tránh trùng tiêu đề
+          title: { $first: "$bookInfo.title" },
+          imgUrl: { $first: "$bookInfo.imgUrl" }, // Thêm imgUrl
+          borrowCount: { $sum: 1 },
+        },
+      },
       { $sort: { borrowCount: -1 } },
       { $limit: 5 },
-      { $project: { _id: 0, title: "$_id", borrowCount: 1 } },
+      {
+        $project: {
+          _id: 0,
+          title: 1,
+          imgUrl: 1, // Bao gồm imgUrl trong kết quả
+          borrowCount: 1,
+        },
+      },
     ].filter((stage) => Object.keys(stage).length > 0);
-
-    console.log("Pipeline:", JSON.stringify(pipeline));
 
     const result = await Borrow.aggregate(pipeline);
     console.log("Result:", result);
@@ -92,8 +101,30 @@ export const getCategoryBorrowStats = async () => {
         },
       },
       { $unwind: "$bookInfo" },
-      { $group: { _id: "$bookInfo.categoryId", borrowCount: { $sum: 1 } } },
-      { $project: { _id: 0, categoryId: "$_id", borrowCount: 1 } },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "bookInfo.categoryId",
+          foreignField: "_id",
+          as: "categoryInfo",
+        },
+      },
+      { $unwind: "$categoryInfo" },
+      {
+        $group: {
+          _id: "$bookInfo.categoryId",
+          categoryName: { $first: "$categoryInfo.categoryName" },
+          borrowCount: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          categoryId: "$_id",
+          categoryName: 1,
+          borrowCount: 1,
+        },
+      },
     ];
     return await Borrow.aggregate(pipeline);
   } catch (error) {
@@ -101,7 +132,6 @@ export const getCategoryBorrowStats = async () => {
   }
 };
 
-// 4. Thống kê theo tác giả
 export const getAuthorBorrowStats = async () => {
   try {
     const pipeline = [
@@ -115,8 +145,30 @@ export const getAuthorBorrowStats = async () => {
         },
       },
       { $unwind: "$bookInfo" },
-      { $group: { _id: "$bookInfo.authorId", borrowCount: { $sum: 1 } } },
-      { $project: { _id: 0, authorId: "$_id", borrowCount: 1 } },
+      {
+        $lookup: {
+          from: "authors",
+          localField: "bookInfo.authorId",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
+      },
+      { $unwind: "$authorInfo" },
+      {
+        $group: {
+          _id: "$bookInfo.authorId",
+          authorName: { $first: "$authorInfo.authorName" },
+          borrowCount: { $sum: 1 },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          authorId: "$_id",
+          authorName: 1,
+          borrowCount: 1,
+        },
+      },
     ];
     return await Borrow.aggregate(pipeline);
   } catch (error) {
