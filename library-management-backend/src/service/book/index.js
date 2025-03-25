@@ -28,12 +28,12 @@ export const getAllBooks = async () => {
 };
 
 export const getBookByBookId = async (bookId) => {
-    const result = await Book.findById(bookId)
-        .populate({
-            path: "categoryId",
-            select: "categoryName",
-        })
-        .populate({ path: "authorId", select: "authorName" });
+    const result = await Book.findById(bookId);
+    // .populate({
+    //     path: "categoryId",
+    //     select: "categoryName",
+    // });
+    // .populate({ path: "authorId", select: "authorName" });
     if (result) {
         return {
             code: 200,
@@ -62,7 +62,7 @@ export const insertBook = async (book) => {
     } catch (error) {
         return {
             code: 500,
-            payload: null,
+            payload: error,
         };
     }
 };

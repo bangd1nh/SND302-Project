@@ -26,6 +26,7 @@ import UserTable from "./component/UserTable";
 import AuthorTable from "./component/AuthorTable";
 import TopBorrowedBooks from "./component/TopBorrowedBooks";
 import AdminStatsPage from "./Page/AdminStatsPage";
+import AdminAuthor from "./Page/AdminAuthor";
 
 function App() {
   function AuthenticatedRoute({ children }) {
@@ -285,6 +286,132 @@ function App() {
                       </div>
                     </>
                   }
+                    path="/admin/*"
+                    element={
+                        <AuthenticatedRoute>
+                            <Routes>
+                                <Route
+                                    path="/"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <div className="">
+                                                <AdminSideBar />
+                                                <div className="ml-64">
+                                                    <Admin />
+                                                    <Footer />
+                                                </div>
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/book"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64">
+                                                <BookTable />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/category"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64">
+                                                <AdminCategory />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/category/:categoryId"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64">
+                                                <CategoryComponent />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/book/add-new-book"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <BookForm />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/book/:bookId"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <AdminBookDetail />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/user"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <UserTable />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/author"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <AuthorTable />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                                <Route
+                                    path="/author/:authorId"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <AdminAuthor />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
+                            </Routes>
+                        </AuthenticatedRoute>
+                    }
                 />
               </Routes>
             </AuthenticatedRoute>
