@@ -29,267 +29,158 @@ import AdminStatsPage from "./Page/AdminStatsPage";
 import AdminAuthor from "./Page/AdminAuthor";
 
 function App() {
-  function AuthenticatedRoute({ children }) {
-    const isAuth = isUserLoggedIn();
+    function AuthenticatedRoute({ children }) {
+        const isAuth = isUserLoggedIn();
 
-    if (isAuth && isAdminUser()) {
-      return children;
+        if (isAuth && isAdminUser()) {
+            return children;
+        }
+
+        return <Navigate to="/login" />;
     }
 
-    return <Navigate to="/login" />;
-  }
+    return (
+        <>
+            <Routes>
+                <Route
+                    path="/"
+                    element={
+                        <>
+                            <Navbar />
+                            <LandingPage />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/login"
+                    element={
+                        <>
+                            <Navbar />
+                            <Login />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/register"
+                    element={
+                        <>
+                            <Navbar />
+                            <Register />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/books"
+                    element={
+                        <>
+                            <Navbar />
+                            <BookPage />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/cart"
+                    element={
+                        <>
+                            <Navbar />
+                            <CartPage />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/resetpassword"
+                    element={
+                        <>
+                            <Navbar />
+                            <ForgotPassword />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/resetpassword/:token"
+                    element={
+                        <>
+                            <Navbar />
+                            <ResetPassword />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/category"
+                    element={
+                        <>
+                            <Navbar />
+                            <Category />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/author"
+                    element={
+                        <>
+                            <Navbar />
+                            <Author />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/statistics/top-books"
+                    element={
+                        <>
+                            <Navbar />
+                            <TopBorrowedBooks />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/book/:bookId"
+                    element={
+                        <>
+                            <Navbar />
+                            <BookDetail />
+                            <Footer />
+                        </>
+                    }
+                />
+                <Route
+                    path="/user/:userId"
+                    element={
+                        <>
+                            <Navbar />
+                            <UserProfile />
+                            <Footer />
+                        </>
+                    }
+                />
 
-  return (
-    <>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <>
-              <Navbar />
-              <LandingPage />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <>
-              <Navbar />
-              <Login />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <>
-              <Navbar />
-              <Register />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/books"
-          element={
-            <>
-              <Navbar />
-              <BookPage />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/cart"
-          element={
-            <>
-              <Navbar />
-              <CartPage />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/resetpassword"
-          element={
-            <>
-              <Navbar />
-              <ForgotPassword />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/resetpassword/:token"
-          element={
-            <>
-              <Navbar />
-              <ResetPassword />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/category"
-          element={
-            <>
-              <Navbar />
-              <Category />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/author"
-          element={
-            <>
-              <Navbar />
-              <Author />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/statistics/top-books"
-          element={
-            <>
-              <Navbar />
-              <TopBorrowedBooks />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/book/:bookId"
-          element={
-            <>
-              <Navbar />
-              <BookDetail />
-              <Footer />
-            </>
-          }
-        />
-        <Route
-          path="/user/:userId"
-          element={
-            <>
-              <Navbar />
-              <UserProfile />
-              <Footer />
-            </>
-          }
-        />
-
-        <Route
-          path="/admin/*"
-          element={
-            <AuthenticatedRoute>
-              <Routes>
                 <Route
-                  path="/"
-                  element={
-                    <>
-                      <Navbar />
-                      <div className="">
-                        <AdminSideBar />
-                        <div className="ml-64">
-                          <Admin />
-                          <Footer />
-                        </div>
-                      </div>
-                    </>
-                  }
-                />
-                <Route
-                  path="/book"
-                  element={
-                    <>
-                      <Navbar />
-                      <AdminSideBar />
-                      <div className="ml-64">
-                        <BookTable />
-                        <Footer />
-                      </div>
-                    </>
-                  }
-                />
-                <Route
-                  path="/category"
-                  element={
-                    <>
-                      <Navbar />
-                      <AdminSideBar />
-                      <div className="ml-64">
-                        <AdminCategory />
-                        <Footer />
-                      </div>
-                    </>
-                  }
-                />
-                <Route
-                  path="/category/:categoryId"
-                  element={
-                    <>
-                      <Navbar />
-                      <AdminSideBar />
-                      <div className="ml-64">
-                        <CategoryComponent />
-                        <Footer />
-                      </div>
-                    </>
-                  }
-                />
-                <Route
-                  path="/book/add-new-book"
-                  element={
-                    <>
-                      <Navbar />
-                      <AdminSideBar />
-                      <div className="ml-64 mt-20">
-                        <BookForm />
-                        <Footer />
-                      </div>
-                    </>
-                  }
-                />
-                <Route
-                  path="/book/:bookId"
-                  element={
-                    <>
-                      <Navbar />
-                      <AdminSideBar />
-                      <div className="ml-64 mt-20">
-                        <AdminBookDetail />
-                        <Footer />
-                      </div>
-                    </>
-                  }
-                />
-                <Route
-                  path="/user"
-                  element={
-                    <>
-                      <Navbar />
-                      <AdminSideBar />
-                      <div className="ml-64 mt-20">
-                        <UserTable />
-                        <Footer />
-                      </div>
-                    </>
-                  }
-                />
-                <Route
-                  path="/author"
-                  element={
-                    <>
-                      <Navbar />
-                      <AdminSideBar />
-                      <div className="ml-64 mt-20">
-                        <AuthorTable />
-                        <Footer />
-                      </div>
-                    </>
-                  }
-                />
-                <Route
-                  path="/stats"
-                  element={
-                    <>
-                      <Navbar />
-                      <AdminSideBar />
-                      <div className="ml-64 mt-20">
-                        <AdminStatsPage />
-                        <Footer />
-                      </div>
-                    </>
-                  }
                     path="/admin/*"
                     element={
                         <AuthenticatedRoute>
                             <Routes>
+                                <Route
+                                    path="/stats"
+                                    element={
+                                        <>
+                                            <Navbar />
+                                            <AdminSideBar />
+                                            <div className="ml-64 mt-20">
+                                                <AdminStatsPage />
+                                                <Footer />
+                                            </div>
+                                        </>
+                                    }
+                                />
                                 <Route
                                     path="/"
                                     element={
@@ -413,13 +304,9 @@ function App() {
                         </AuthenticatedRoute>
                     }
                 />
-              </Routes>
-            </AuthenticatedRoute>
-          }
-        />
-      </Routes>
-    </>
-  );
+            </Routes>
+        </>
+    );
 }
 
 export default App;
