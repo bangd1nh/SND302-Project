@@ -53,3 +53,36 @@ export const countUser = async () => {
     const result = await User.countDocuments();
     return result;
 };
+export const changeUserPassword = async (userId, oldPassword, newPassword) => {
+    try {
+        // Tìm người dùng trong cơ sở dữ liệu
+        const user = await User.findById(userId);
+        if (!user) {
+            return { code: 404, payload: { message: "User not found." } };
+        }
+
+        // Kiểm tra mật khẩu cũ
+        const isMatch = await bcrypt.compare(oldPassword, user.password);
+        if (!isMatch) {
+            return { code: 400, payload: { message: "Incorrect old password." } };
+        }
+
+        // Kiểm tra mật khẩu mới không trùng với mật khẩu cũ
+        const isSamePassword = await bcrypt.compare(newPassword, user.password);
+        if (isSamePassword) {
+            return { code: 400, payload: { message: "New password must be different from old password." } };
+        }
+
+        // Hash mật khẩu mới
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        user.password = hashedPassword;
+
+        // Lưu lại vào MongoDB
+        await user.save();
+
+        return { code: 200, payload: { message: "Password updated successfully!" } };
+    } catch (error) {
+        console.error("Error updating password:", error);
+        return { code: 500, payload: { message: "An error occurred." } };
+    }
+};
