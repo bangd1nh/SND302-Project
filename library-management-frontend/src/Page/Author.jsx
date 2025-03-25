@@ -8,13 +8,9 @@ function Author() {
     const [authors, setAuthors] = useState([]);
     const [authorId, setAuthorId] = useState("");
     const [authorName, setAuthorName] = useState("");
-    useEffect(
-        () =>
-            getAllAuthor()
-                .then((res) => setAuthors(res.data))
-                .then((err) => console.log(err)),
-        []
-    );
+    useEffect(() => {
+        getAllAuthor().then((res) => setAuthors(res.data));
+    }, [authorId]);
     const handleCallBack = (data) => {
         setAuthorId(() => data.authorId);
         setAuthorName(() => data.authorName);
