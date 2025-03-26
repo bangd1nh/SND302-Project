@@ -11,7 +11,7 @@ import streamifier from "streamifier";
 
 const author = express.Router();
 const storage = multer.memoryStorage();
-const upload = multer({ storage }).single("image"); // Ensure the field name matches the frontend formData key
+const upload = multer({ storage }).single("image");
 
 author.get("/", async (req, res) => {
     const result = await getAllAuthor();
@@ -98,7 +98,10 @@ author.post(
             };
         }
 
+        console.log(iAuthor);
+
         const result = await insertAuthor(iAuthor);
+        console.log(result);
         res.status(result.code).send(result.body);
     }
 );

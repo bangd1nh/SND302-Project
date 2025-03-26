@@ -12,7 +12,6 @@ function Author() {
         getAllAuthor().then((res) => setAuthors(res.data));
     }, [authorId]);
 
-    
     const handleCallBack = (data) => {
         setAuthorId(() => data.authorId);
         setAuthorName(() => data.authorName);
