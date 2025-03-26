@@ -20,3 +20,17 @@ export const updateUserImage = (formData, id) =>
     });
 
 export const getAllUser = () => axios.get(USER_REST_API_BASE_URL);
+
+export const changePassword = async (userId, oldPassword, newPassword) => {
+    try {
+        const response = await axios.post(
+            `${USER_REST_API_BASE_URL}/change-password/${userId}`,
+            { oldPassword, newPassword }
+        );
+        return response.data;
+    } catch (error) {
+        console.error("Error changing password:", error.response?.data || error);
+        throw error.response?.data || error;
+    }
+};
+

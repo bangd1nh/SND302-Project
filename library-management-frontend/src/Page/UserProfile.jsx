@@ -5,15 +5,20 @@ import {
     getUserById,
     updateUser,
     updateUserImage,
+    changePassword,
 } from "../Services/userService";
 
 function UserProfile() {
     const { userId } = useParams();
     const [isEdit, setIsEdit] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
-    const [userProfile, setUserProfile] = useState({
-        address: "",
+    const [isChangingPassword, setIsChangingPassword] = useState(false);
+    const [passwordData, setPasswordData] = useState({
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
     });
+    const [userProfile, setUserProfile] = useState({ address: "" });
 
     const {
         data: userDetail = {},
@@ -25,24 +30,23 @@ function UserProfile() {
         queryKey: ["user", userId],
     });
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (isError) {
-        return <div>Error loading user data.</div>;
-    }
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error loading user data.</div>;
 
     const handleUpdate = (e) => {
         e.preventDefault();
         setIsEdit(true);
     };
 
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
-        updateUser(id, userProfile).then((res) => {
-            refetch(), setIsEdit(false);
-        });
+        try {
+            await updateUser(userId, userProfile);
+            refetch();
+            setIsEdit(false);
+        } catch (error) {
+            alert("Failed to update profile: " + error.message);
+        }
     };
 
     const handleCancel = (e) => {
@@ -50,66 +54,103 @@ function UserProfile() {
         setIsEdit(false);
     };
 
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+        if (passwordData.newPassword !== passwordData.confirmPassword) {
+            alert("New password and confirm password do not match!");
+            return;
+        }
+        try {
+            await changePassword(userId, passwordData.oldPassword, passwordData.newPassword);
+            alert("Password changed successfully!");
+            setIsChangingPassword(false);
+            setPasswordData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+        } catch (error) {
+            alert("Failed to change password: " + error.message);
+        }
+    };
+
     const handleFileChange = async (e) => {
         setIsProcessing(true);
         const file = e.target.files[0];
         if (!file) return;
+
         const formData = new FormData();
         formData.append("file", file);
-        console.log(formData);
-        console.log("Uploading file:", file);
 
         try {
             const response = await updateUserImage(formData, userId);
-            console.log("Server response:", response);
-
             if (response.status === 200) {
                 alert("Avatar uploaded successfully!");
                 refetch();
             } else {
-                console.error("Upload failed:", response);
                 alert("Failed to upload avatar.");
             }
         } catch (error) {
-            console.error("Error uploading avatar:", error);
-            alert("Failed to upload avatar.");
+            alert("Error uploading avatar: " + error.message);
         } finally {
             setIsProcessing(false);
         }
     };
 
-    console.log("userDetail", userDetail);
-
-    function formatDateTime(isoString) {
-        const date = new Date(isoString);
-
-        const formattedDate = date.toLocaleDateString("en-GB");
-        const formattedTime = date.toLocaleTimeString("en-GB");
-
-        return `${formattedDate} ${formattedTime}`;
-    }
-
     const handleButtonClick = () => {
         document.getElementById("fileInput").click();
     };
+
+    function formatDateTime(isoString) {
+        const date = new Date(isoString);
+        return `${date.toLocaleDateString("en-GB")} ${date.toLocaleTimeString("en-GB")}`;
+    }
 
     return (
         <div className="w-full mt-25">
             <div className="bg-white w-2/3 shadow overflow-hidden sm:rounded-lg mx-auto">
                 <div className="px-4 py-5 sm:px-6">
-                    <h3 className="text-center text-lg leading-6 font-medium text-gray-900">
+                    <h3 className="text-center text-lg font-medium text-gray-900">
                         {userDetail.username} Profile
                     </h3>
                     <p className="mt-1 text-sm text-gray-500 text-center">
                         Details and informations about {userDetail.username}.
                     </p>
-                    <a
-                        href="/change-password"
-                        className=" border rounded-lg border-orange-500 bg-orange-500 text-white px-2 py-1 hover:bg-orange-700 hover:border-orange-700 duration-300 text-grey-900 font-semibold capitalize text-start"
+                    <button
+                        onClick={() => setIsChangingPassword(!isChangingPassword)}
+                        className="border rounded-lg border-orange-500 bg-orange-500 text-white px-2 py-1 hover:bg-orange-700 duration-300 font-semibold"
                     >
-                        Change password
-                    </a>
-
+                        Change Password
+                    </button>
+                    {isChangingPassword && (
+                        <form onSubmit={handleChangePassword} className="mt-4">
+                            <input
+                                type="password"
+                                placeholder="Old Password"
+                                className="border p-2 rounded w-full mt-2"
+                                value={passwordData.oldPassword}
+                                onChange={(e) => setPasswordData({ ...passwordData, oldPassword: e.target.value })}
+                            />
+                            <input
+                                type="password"
+                                placeholder="New Password"
+                                className="border p-2 rounded w-full mt-2"
+                                value={passwordData.newPassword}
+                                onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                            />
+                            <input
+                                type="password"
+                                placeholder="Confirm Password"
+                                className="border p-2 rounded w-full mt-2"
+                                value={passwordData.confirmPassword}
+                                onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                            />
+                            <button
+                                type="submit"
+                                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
+                            >
+                                Submit
+                            </button>
+                        </form>
+                    )}
+                </div>
+                <div className="border-t border-gray-200">
                     {isEdit ? (
                         <>
                             <button
