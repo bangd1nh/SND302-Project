@@ -5,6 +5,7 @@ import {
     getBookByBookId,
     insertBook,
     updateBook,
+    uploadImage,
 } from "../service/book/index.js";
 import { authenticateForAdminUser } from "../middleware/index.js";
 import multer from "multer";
@@ -100,8 +101,7 @@ book.post(
 );
 
 book.put("/:bookId", authenticateForAdminUser, async (req, res) => {
-    const { title, categoryId, authorId, description, status, imgUrl } =
-        req.body;
+    const { title, categoryId, authorId, description, status } = req.body;
     const bookId = req.params.bookId;
     const book = {
         title: title,
@@ -109,10 +109,28 @@ book.put("/:bookId", authenticateForAdminUser, async (req, res) => {
         authorId: authorId,
         description: description,
         status: status,
-        imgUrl: imgUrl,
     };
     const result = await updateBook(book, bookId);
     res.status(result.code).send(result.payload);
+});
+
+book.post("/uploadCloudinary/:bookId", upload, async (req, res) => {
+    const { bookId } = req.params;
+    const file = req.file;
+    if (!file) {
+        return res.status(400).json({ message: "No file uploaded" });
+    }
+
+    try {
+        const result = await uploadImage(file, bookId);
+        console.log("Upload success:", result);
+        return res.status(result.code).json(result);
+    } catch (error) {
+        console.error("Upload error:", error);
+        return res
+            .status(500)
+            .json({ message: "Error uploading image", error: error.message });
+    }
 });
 
 book.delete("/:bookId", async (req, res) => {

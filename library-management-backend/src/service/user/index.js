@@ -64,13 +64,22 @@ export const changeUserPassword = async (userId, oldPassword, newPassword) => {
         // Kiểm tra mật khẩu cũ
         const isMatch = await bcrypt.compare(oldPassword, user.password);
         if (!isMatch) {
-            return { code: 400, payload: { message: "Incorrect old password." } };
+            return {
+                code: 400,
+                payload: { message: "Incorrect old password." },
+            };
         }
 
         // Kiểm tra mật khẩu mới không trùng với mật khẩu cũ
         const isSamePassword = await bcrypt.compare(newPassword, user.password);
         if (isSamePassword) {
-            return { code: 400, payload: { message: "New password must be different from old password." } };
+            return {
+                code: 400,
+                payload: {
+                    message:
+                        "New password must be different from old password.",
+                },
+            };
         }
 
         // Hash mật khẩu mới
@@ -80,7 +89,10 @@ export const changeUserPassword = async (userId, oldPassword, newPassword) => {
         // Lưu lại vào MongoDB
         await user.save();
 
-        return { code: 200, payload: { message: "Password updated successfully!" } };
+        return {
+            code: 200,
+            payload: { message: "Password updated successfully!" },
+        };
     } catch (error) {
         console.error("Error updating password:", error);
         return { code: 500, payload: { message: "An error occurred." } };
