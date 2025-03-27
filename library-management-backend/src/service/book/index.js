@@ -3,12 +3,38 @@ import Author from "../../models/author.js";
 import Book from "../../models/book.js";
 import Category from "../../models/category.js";
 import { v2 as cloudinary } from "cloudinary";
+import streamifier from "streamifier";
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRETE,
 });
+
+export const uploadImage = async (file, bookId) => {
+    return new Promise((resolve, reject) => {
+        let stream = cloudinary.uploader.upload_stream(
+            { folder: "book" },
+            async (error, uploadResult) => {
+                if (error) {
+                    console.error("Cloudinary error:", error);
+                    return reject({ code: 500, payload: error.message });
+                }
+                try {
+                    await Book.findByIdAndUpdate(bookId, {
+                        imgUrl: uploadResult.url,
+                    });
+                    resolve({ code: 200, payload: uploadResult });
+                } catch (dbError) {
+                    console.error("Database update error:", dbError);
+                    reject({ code: 500, payload: dbError.message });
+                }
+                resolve({ code: 200, payload: uploadResult });
+            }
+        );
+        streamifier.createReadStream(file.buffer).pipe(stream);
+    });
+};
 
 export const getAllBooks = async () => {
     try {

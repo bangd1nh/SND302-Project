@@ -25,7 +25,7 @@ function AuthorCard({ authors, callback }) {
                                 />
                             </div>
 
-                            <div className="p-6 pb-4 group-hover:bg-indigo-800 duration-[0.3s]">
+                            <div className="p-6 pb-4 group-hover:bg-indigo-800 duration-[0.3s] h-full">
                                 <div className="mt-1">
                                     <span className="text-2xl font-semibold group-hover:text-white">
                                         {au.authorName}
