@@ -56,19 +56,6 @@ function CartPage() {
     localStorage.setItem("selectedItems", JSON.stringify(updatedSelectedItems));
   };
 
-  //   const handleRemoveProduct = (productId) => {
-  //     const updatedCartItems = cartItems
-  //       .map((item) => (item._id === productId ? { ...item, quantity: item.quantity - 1 } : item))
-  //       .filter((item) => item.quantity > 0);
-  //     setCartItems(updatedCartItems);
-  //     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-
-  //     const updatedSelectedItems = { ...selectedItems };
-  //     delete updatedSelectedItems[productId];
-  //     setSelectedItems(updatedSelectedItems);
-  //     localStorage.setItem("selectedItems", JSON.stringify(updatedSelectedItems));
-  //   };
-
   const handleClearCart = () => {
     setCartItems([]);
     setSelectedItems({});
@@ -101,11 +88,13 @@ function CartPage() {
 
     if (selectedBooks.length === 0) {
       setErrorMessage("Please select at least one book to borrow.");
+      setSuccessMessage("");
       return;
     }
 
     if (!termsAccepted) {
-      setErrorMessage("Please accept the terms and conditions to proceed.");
+      setErrorMessage("Please accept the terms and conditions.");
+      setSuccessMessage("");
       return;
     }
 
@@ -117,44 +106,44 @@ function CartPage() {
         token
       );
 
-      console.log("API Response:", response); // Log toàn bộ response để debug
+      console.log("API Response:", response); // Debug dữ liệu trả về
 
       if (response.status === 201) {
-        setSuccessMessage("Books borrowed successfully!");
-        setErrorMessage("");
-        // Không đóng form ngay, giữ để hiển thị thông báo
-      } else if (response.status === 400) {
-        setErrorMessage(
-          response.data.payload || "Invalid request. Please check your input."
+        setSuccessMessage(
+          "Books borrowed successfully! Please visit the library to collect them."
         );
-      } else if (response.status === 404) {
-        setErrorMessage(
-          response.data.payload || "Book not found or unavailable."
-        );
-      } else if (response.status === 500) {
-        setErrorMessage(
-          response.data.payload ||
-            "Server error occurred. Please try again later."
-        );
+        setErrorMessage(""); // Đảm bảo xóa thông báo lỗi
       } else {
-        setErrorMessage("Unexpected error. Please try again.");
+        // Nếu API không trả về status 201, hiển thị thông báo lỗi
+        const errorPayload = response.data.payload || "Unknown error";
+        setErrorMessage(errorPayload);
+        setSuccessMessage("");
       }
     } catch (error) {
       console.error(
         "Error details:",
         error.response ? error.response.data : error.message
       );
-      setErrorMessage(
-        "An error occurred. Please try again. " +
-          (error.response ? error.response.data.payload : error.message)
-      );
-      setSuccessMessage("");
+      const errorPayload = error.response
+        ? error.response.data.payload
+        : error.message;
+      if (error.response?.status === 400) {
+        setErrorMessage(
+          errorPayload || "Invalid request. Please check your input."
+        );
+      } else if (error.response?.status === 404) {
+        setErrorMessage(errorPayload || "Book not found or unavailable.");
+      } else {
+        setErrorMessage("An error occurred. Please try again. " + errorPayload);
+      }
+      setSuccessMessage(""); // Đảm bảo xóa thông báo thành công nếu có lỗi
     }
   };
 
   const handleContinue = () => {
     setIsCheckoutOpen(false);
     setSuccessMessage("");
+    setErrorMessage(""); // Xóa thông báo lỗi khi tiếp tục
     setTermsAccepted(false);
     const remainingCartItems = cartItems.filter(
       (item) => !selectedItems[item._id]
@@ -168,7 +157,7 @@ function CartPage() {
     );
     setSelectedItems(updatedSelectedItems);
     localStorage.setItem("selectedItems", JSON.stringify(updatedSelectedItems));
-    navigate("/"); // Điều hướng về trang chính
+    navigate("/");
   };
 
   return (
@@ -198,7 +187,7 @@ function CartPage() {
                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
               />
               <label className="ml-2 text-sm text-gray-600">
-                {allSelected ? "Bỏ chọn tất cả" : "Chọn tất cả"}
+                {allSelected ? "Deselect All" : "Select All"}
               </label>
             </div>
 
@@ -240,17 +229,6 @@ function CartPage() {
                       <p className="mt-1 text-sm text-gray-500">
                         Status: {item.status}
                       </p>
-                    </div>
-                    <div className="flex flex-1 items-end justify-between text-sm">
-                      <div className="flex items-center">
-                        <button
-                          type="button"
-                          className="font-medium text-indigo-600 hover:text-indigo-500"
-                          onClick={() => handleCheckout(item._id)}
-                        >
-                          Remove
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </li>
@@ -350,14 +328,11 @@ function CartPage() {
                       <p className="mt-1">
                         1. Borrowers are required to visit the library to
                         collect the borrowed books at the earliest possible
-                        convenience to ensure availability and proper
-                        documentation.
+                        convenience.
                       </p>
                       <p className="mt-1">
                         2. Late returns will incur a fine of $0.50 per day,
                         calculated from the due date until the book is returned.
-                        Continued non-compliance may result in suspension of
-                        borrowing privileges.
                       </p>
                     </div>
                   </div>
